@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project basedir="." default="build" name="FRC-2018">
+	<property environment="env"/>
+	<property name="wpilib" value="lib/WPILib.jar"/>
+	<property name="cscore" value="lib/cscore.jar"/>
+	<property name="networktables" value="lib/NetworkTables.jar"/>
+	<property name="junit.output.dir" value="junit"/>
+	<property name="debuglevel" value="source,lines,vars"/>
+	<property name="target" value="1.8"/>
+	<property name="source" value="1.8"/>
+	<path id="FRC-2018.classpath">
+		<pathelement location="bin"/>
+		<pathelement location="lib/WPILib.jar"/>
+		<pathelement location="lib/cscore.jar"/>
+		<pathelement location="lib/NetworkTables.jar"/>
+		<pathelement location="lib/Lib2585.jar"/>
+		<pathelement location="lib/junit-4.12.jar"/>
+		<pathelement location="lib/hamcrest-core-1.3.jar"/>
+	</path>
+	<target name="init">
+		<mkdir dir="bin"/>
+		<copy includeemptydirs="false" todir="bin">
+			<fileset dir="src">
+				<exclude name="**/*.java"/>
+			</fileset>
+		</copy>
+	</target>
+	<target name="clean">
+		<delete dir="bin"/>
+	</target>
+	<target depends="clean" name="cleanall"/>
+	<target depends="build-subprojects,build-project" name="build"/>
+	<target name="build-subprojects"/>
+	<target depends="init" name="build-project">
+		<echo message="${ant.project.name}: ${ant.file}"/>
+		<javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
+			<src path="src"/>
+			<src path="test"/>
+			<classpath refid="FRC-2018.classpath"/>
+		</javac>
+	</target>
+	<target depends="build" name="test">
+		<mkdir dir="${junit.output.dir}"/>
+		<junit fork="yes" haltonfailure="yes" printsummary="withOutAndErr">
+			<batchtest>
+				<fileset dir="test/">
+					<include name="**/*.java"/>
+				</fileset>
+			</batchtest>
+			<classpath refid="FRC-2018.classpath"/>
+		</junit>
+	</target>
+</project>
