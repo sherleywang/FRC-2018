@@ -6,6 +6,7 @@ import java.util.HashMap;
 import org.impact2585.lib2585.RobotEnvironment;
 import org.usfirst.frc.team2585.input.InputMethod;
 import org.usfirst.frc.team2585.input.XBoxInput;
+import org.usfirst.frc.team2585.systems.IntakeSystem;
 import org.usfirst.frc.team2585.systems.RobotSystem;
 
 /**
@@ -17,7 +18,7 @@ public class Environment extends RobotEnvironment {
 	private HashMap<String, RobotSystem> systems;
 	
 	public static final String WHEEL_SYSTEM = "wheelSystem";
-	public static final String HIGH_FIVE_SYSTEM = "highFiveSystem";
+	public static final String INTAKE_SYSTEM = "intakeSystem";
 
 	/**
 	 * Initializes the systems and input
@@ -30,6 +31,7 @@ public class Environment extends RobotEnvironment {
 		systems = new HashMap<String, RobotSystem>();
 		
 		// Add each of the systems to hashMap
+		systems.put(Environment.INTAKE_SYSTEM, new IntakeSystem());
 		
 		// Initialize each system
 		for (RobotSystem system : systems.values()) {
