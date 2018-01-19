@@ -20,7 +20,7 @@ public class CubeLiftSystem extends RobotSystem {
 	public void init(Environment environ) {
 		super.init(environ);
 
-		liftMotor = new RampedSpeedController (RobotMap.LIFT_MOTOR);
+		liftMotor = new RampedSpeedController (RobotMap.CUBE_LIFT_MOTOR);
 	}
 
 	/* (non-Javadoc)

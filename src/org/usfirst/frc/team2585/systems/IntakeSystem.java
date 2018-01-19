@@ -11,7 +11,6 @@ import org.usfirst.frc.team2585.robot.RobotMap;
 public class IntakeSystem extends RobotSystem implements Runnable {
 
 	RampedSpeedController intakeMotor;
-	RampedSpeedController outtakeMotor;
 
 	// These numbers need to be adjusted after testing
 	static double motorSpeed = 0.9;
