@@ -2,9 +2,6 @@ package org.usfirst.frc.team2585.robot;
 
 import org.impact2585.lib2585.ExecutorBasedRobot;
 
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the IterativeRobot
@@ -35,7 +32,7 @@ public class Robot extends ExecutorBasedRobot {
 	 */
 	@Override 
 	public void teleopInit() {
-//		setExecutor(new TeleopExecutor(environ));
+		setExecutor(new TeleopExecutor(environ));
 	}
 
 	/**

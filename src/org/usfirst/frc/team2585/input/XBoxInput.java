@@ -24,7 +24,7 @@ public class XBoxInput extends InputMethod {
 	 */
 	@Override
 	public boolean shouldIntake() {
-		return controller.getRawAxis(XboxConstants.RIGHT_TRIGGER) > minTriggerActuation;
+		return controller.getRawAxis(XboxConstants.LEFT_TRIGGER) > minTriggerActuation;
 	}
 	
 	/* (non-Javadoc)
@@ -32,8 +32,30 @@ public class XBoxInput extends InputMethod {
 	 */
 	@Override
 	public boolean shouldOuttake() {
-		return controller.getRawAxis(XboxConstants.LEFT_TRIGGER) > minTriggerActuation;
+		return controller.getRawAxis(XboxConstants.RIGHT_TRIGGER) > minTriggerActuation;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.usfirst.frc.team2585.input.InputMethod#shouldLiftCube()
+	 */
+	@Override
+	public boolean shouldLiftCube(){
+		return controller.getRawButton(XboxConstants.A_BUTTON);
 	}
 
-	
+	/* (non-Javadoc)
+	 * @see org.usfirst.frc.team2585.input.InputMethod#forwardAmount()
+	 */
+	@Override
+	public double forwardAmount() {
+		return controller.getRawAxis(XboxConstants.LEFT_Y_AXIS);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.usfirst.frc.team2585.input.InputMethod#rotationAmount()
+	 */
+	@Override
+	public double rotationAmount() {
+		return controller.getRawAxis(XboxConstants.RIGHT_X_AXIS);
+	}
 }
