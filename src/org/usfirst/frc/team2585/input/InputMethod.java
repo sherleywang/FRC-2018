@@ -26,6 +26,20 @@ public abstract class InputMethod {
 	}
 	
 	/**
+	 * @return a boolean denoting whether or not the robot should start climbing
+	 */
+	public boolean shouldClimb() {
+		return false;
+	}
+	
+	/**
+	 * @return a boolean denoting whether or not the robot's climb arm should return to its original position
+	 */
+	public boolean shouldRetractArm() {
+		return false;
+	}
+	
+	/**
 	 * @return the amount that the robot should drive forward
 	 */
 	public double forwardAmount() {

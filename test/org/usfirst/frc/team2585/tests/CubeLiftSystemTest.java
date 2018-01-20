@@ -7,7 +7,7 @@ import org.usfirst.frc.team2585.input.InputMethod;
 import org.usfirst.frc.team2585.systems.CubeLiftSystem;
 
 /**
- * Unit Tests for the candy shooter system
+ * Unit Tests for the cube lift system
  */
 public class CubeLiftSystemTest {
 	private TestInput input;
@@ -18,7 +18,7 @@ public class CubeLiftSystemTest {
 	double motorSpeedOutput;
 	
 	/**
-	 * Create new input and candy shooter system for testing
+	 * Create new input and cube lift system for test
 	 */
 	@Before
 	public void setUp() {
@@ -29,7 +29,7 @@ public class CubeLiftSystemTest {
 	
 	/**
 	 * Tests that the speed of the motor is more than 0
-	 * when the shoot button is pressed
+	 * when the cube lift button is pressed
 	 */
 	@Test
 	public void motorRunsWhenLifting() {
@@ -63,7 +63,7 @@ public class CubeLiftSystemTest {
 	}
 	
 	/**
-	 * Testable input for the high five system tests
+	 * Testable input for the cube lift system tests
 	 */
 	private class TestInput extends InputMethod {
 		/* (non-Javadoc)
@@ -77,7 +77,7 @@ public class CubeLiftSystemTest {
 	}
 	
 	/**
-	 * A testable High Five System
+	 * A testable CubeLiftSystem
 	 */
 	private class TestCubeLiftSystem extends CubeLiftSystem {
 
