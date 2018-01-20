@@ -10,7 +10,8 @@ import org.usfirst.frc.team2585.robot.RobotMap;
  */
 public class IntakeSystem extends RobotSystem implements Runnable {
 
-	RampedSpeedController intakeMotor;
+	RampedSpeedController intakeMotorRight;
+	RampedSpeedController intakeMotorLeft;
 
 	// These numbers need to be adjusted after testing
 	static double motorSpeed = 0.9;
@@ -23,7 +24,8 @@ public class IntakeSystem extends RobotSystem implements Runnable {
 	public void init(Environment environ) {
 		super.init(environ);
 
-		intakeMotor = new RampedSpeedController(RobotMap.INTAKE_MOTOR);
+		intakeMotorRight = new RampedSpeedController(RobotMap.INTAKE_MOTOR_RIGHT);
+		intakeMotorLeft = new RampedSpeedController(RobotMap.INTAKE_MOTOR_LEFT);
 	}
 
 	/* (non-Javadoc)
@@ -51,7 +53,8 @@ public class IntakeSystem extends RobotSystem implements Runnable {
 	 * @param intakeSpeed is the speed to set the motor to
 	 */
 	public void setMotorSpeed(double intakeSpeed) {
-		intakeMotor.updateWithSpeed(intakeSpeed);
+		intakeMotorRight.updateWithSpeed(-intakeSpeed);
+		intakeMotorLeft.updateWithSpeed(intakeSpeed);
 	}
 
 	/* (non-Javadoc)
@@ -59,7 +62,8 @@ public class IntakeSystem extends RobotSystem implements Runnable {
 	 */
 	@Override
 	public void destroy() {
-		intakeMotor.destroy();
+		intakeMotorRight.destroy();
+		intakeMotorLeft.destroy();
 	}
 
 	/* (non-Javadoc)
@@ -67,7 +71,8 @@ public class IntakeSystem extends RobotSystem implements Runnable {
 	 */
 	@Override
 	public void stop() {
-		intakeMotor.updateWithSpeed(0);
+		intakeMotorRight.updateWithSpeed(0);
+		intakeMotorLeft.updateWithSpeed(0);
 	}
 
 }
