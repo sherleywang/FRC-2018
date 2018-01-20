@@ -44,6 +44,22 @@ public class XBoxInput extends InputMethod {
 	}
 
 	/* (non-Javadoc)
+	 * @see org.usfirst.frc.team2585.input.InputMethod#shouldClimb()
+	 */
+	@Override
+	public boolean shouldClimb(){
+		return controller.getRawButton(XboxConstants.Y_BUTTON);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.usfirst.frc.team2585.input.InputMethod#shouldRetractArm()
+	 */
+	@Override
+	public boolean shouldRetractArm(){
+		return controller.getRawButton(XboxConstants.X_BUTTON);
+	}
+	
+	/* (non-Javadoc)
 	 * @see org.usfirst.frc.team2585.input.InputMethod#forwardAmount()
 	 */
 	@Override
