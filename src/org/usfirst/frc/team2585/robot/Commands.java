@@ -12,6 +12,9 @@ public class Commands {
 	private static Environment environ;
 	private static WheelSystem drivetrain;
 	
+	private String gameData;
+	private int location;
+	
 	/**
 	 * Constructor that sets the environment and the required systems
 	 * @param e the environment of the robot
@@ -20,6 +23,10 @@ public class Commands {
 		environ = env;
 
 		drivetrain = (WheelSystem) environ.getSystem(Environment.WHEEL_SYSTEM);
+		
+		// Location of the driverStation: 1, 2, 3; L, M, R
+		location = DriverStation.getInstance().getLocation(); 
+		gameData = DriverStation.getInstance().getGameSpecificMessage();
 	}
 	
 	/**
@@ -56,12 +63,22 @@ public class Commands {
 	 */
 	public class Main implements AutonomousCommand {
 		
+		private void runFromMiddle() {
+		}
+		
+		private void runFromSide() {
+		}
+		
 		/* (non-Javadoc)
 		 * @see org.usfirst.frc.team2585.AutonomousCommand#execute(long)
 		 */
 		@Override
 		public void execute(long timeElapsed) {
-			stop();
+			if (location == 2) {
+				runFromMiddle();
+			} else {
+				runFromSide();
+			}
 		}
 	}
 	
@@ -70,7 +87,6 @@ public class Commands {
 	 */
 	public class Straight implements AutonomousCommand {
 		private static final int timeToDriveStraight = 3100;
-		
 		/* (non-Javadoc)
 		 * @see org.usfirst.frc.team2585.AutonomousCommand#execute(long)
 		 */
