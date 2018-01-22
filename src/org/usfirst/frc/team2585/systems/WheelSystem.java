@@ -35,7 +35,15 @@ public class WheelSystem extends RobotSystem {
 	 * Pass the user inputs to the drive train to run the motors the appropriate amounts
 	 */
 	public void run() {
-		drive.arcadeControl(input.forwardAmount(), input.rotationAmount(), false, false);
+		driveWithRotation(input.forwardAmount(), input.rotationAmount());
+	}
+	
+	/**
+	 * @param forward the amount to drive forward
+	 * @param rotation the amount to rotate
+	 */
+	public void driveWithRotation(double forward, double rotation) {
+		drive.arcadeControl(forward, rotation, false, false);
 	}
 
 	/* (non-Javadoc)
