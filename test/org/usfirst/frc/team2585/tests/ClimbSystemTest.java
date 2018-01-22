@@ -14,6 +14,7 @@ public class ClimbSystemTest {
 	private TestClimbSystem climbSystem;
 	
 	boolean shouldClimb;
+	boolean shouldRetractArm;
 	
 	double motorSpeedOutput;
 	
@@ -28,13 +29,69 @@ public class ClimbSystemTest {
 	}
 	
 	/**
-	 * Tests that the speed of the motor is more than 0
+	 * Tests that the speed of the motor is more than 0 when climbing
 	 */
 	@Test
 	public void motorRunsWhenClimbing() {
 		shouldClimb = true;
 		climbSystem.run();
 		Assert.assertTrue(motorSpeedOutput > 0);
+	}
+	
+	/**
+	 * Tests that the speed of the motor is running the other way when retracting
+	 */
+	@Test
+	public void motorRunsWhenRetracting() {
+		shouldRetractArm = true;
+		climbSystem.run();
+		Assert.assertTrue(motorSpeedOutput < 0);
+	}
+	
+	/**
+	 * Tests that the speed of the motor is stationary when no buttons are pressed
+	 */
+	@Test
+	public void motorStationary() {
+		shouldRetractArm = false;
+		shouldClimb = false;
+		climbSystem.run();
+		Assert.assertTrue(motorSpeedOutput == 0);
+	}
+	
+	/**
+	 * Tests that the motor is stationary when both buttons are pressed
+	 */
+	@Test
+	public void motorStationaryWhenBothTrue() {
+		shouldRetractArm = true;
+		shouldClimb = true;
+		climbSystem.run();
+		Assert.assertTrue(motorSpeedOutput == 0);
+	}
+	
+	/**
+	 * Tests that the motor returns to stationary after retracting
+	 */
+	@Test
+	public void motorStationaryAfterRetracting() {
+		shouldRetractArm = true;
+		climbSystem.run();
+		shouldRetractArm = false;
+		climbSystem.run();
+		Assert.assertTrue(motorSpeedOutput == 0);
+	}
+	
+	/**
+	 * Tests that the motor returns to stationary after climbing
+	 */
+	@Test
+	public void motorStationaryAfterClimbing() {
+		shouldClimb = true;
+		climbSystem.run();
+		shouldClimb = false;
+		climbSystem.run();
+		Assert.assertTrue(motorSpeedOutput == 0);
 	}
 	
 	/**
@@ -48,7 +105,13 @@ public class ClimbSystemTest {
 		public boolean shouldClimb() {
 			return shouldClimb;
 		}
-		
+		/* (non-Javadoc)
+		 * @see org.usfirst.frc.team2585.input.InputMethod#shouldRetractArm()
+		 */
+		@Override
+		public boolean shouldRetractArm() {
+			return shouldRetractArm;
+		}
 	}
 	
 	/**
