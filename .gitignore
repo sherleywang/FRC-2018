@@ -26,3 +26,5 @@ hs_err_pid*
 # Folders
 bin
 .settings/
+
+.DS_Store
