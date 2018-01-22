@@ -6,6 +6,7 @@ import java.util.HashMap;
 import org.impact2585.lib2585.RobotEnvironment;
 import org.usfirst.frc.team2585.input.InputMethod;
 import org.usfirst.frc.team2585.input.XBoxInput;
+import org.usfirst.frc.team2585.systems.ClimbSystem;
 import org.usfirst.frc.team2585.systems.CubeLiftSystem;
 import org.usfirst.frc.team2585.systems.IntakeSystem;
 import org.usfirst.frc.team2585.systems.RobotSystem;
@@ -22,6 +23,7 @@ public class Environment extends RobotEnvironment {
 	public static final String WHEEL_SYSTEM = "wheelSystem";
 	public static final String INTAKE_SYSTEM = "intakeSystem";
 	public static final String CUBE_LIFT_SYSTEM = "cubeLiftSystem";
+	public static final String CLIMB_SYSTEM = "climbSystem";
 
 	/**
 	 * Initializes the systems and input
@@ -37,6 +39,7 @@ public class Environment extends RobotEnvironment {
 		systems.put(Environment.WHEEL_SYSTEM, new WheelSystem());
 		systems.put(Environment.INTAKE_SYSTEM, new IntakeSystem());
 		systems.put(Environment.CUBE_LIFT_SYSTEM, new CubeLiftSystem());
+		systems.put(Environment.CLIMB_SYSTEM, new ClimbSystem());
 		
 		// Initialize each system
 		for (RobotSystem system : systems.values()) {

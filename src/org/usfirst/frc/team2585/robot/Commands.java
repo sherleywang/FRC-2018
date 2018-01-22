@@ -59,14 +59,39 @@ public class Commands {
 	
 	
 	/**
-	 * Autonomous command that that drives the robot forward and then turns left and continues driving forward
+	 * Autonomous command that drives according to its position and the side of its switch
 	 */
 	public class Main implements AutonomousCommand {
 		
-		private void runFromMiddle() {
+		private static final int timeToDriveStraight = 3100;
+		
+		private void runStraight(long timeElapsed) {
+			if (timeElapsed < timeToDriveStraight) {
+				driveForward();
+			} else {
+				stop();
+			}
 		}
 		
-		private void runFromSide() {
+		private void runFromMiddle(long timeElapsed){
+			if(gameData.length() < 1){
+				runStraight(timeElapsed);
+			} else if(gameData.charAt(0) == 'L'){
+				
+			} else if(gameData.charAt(0) == 'R'){
+				
+			}
+		}
+		private void runFromSide(long timeElapsed){
+			if(gameData.length() < 1){
+				runStraight(timeElapsed);
+			} if(gameData.charAt(0) == 'L'){
+
+			} else if(gameData.charAt(0) == 'R'){
+				
+			} else {
+				runStraight(timeElapsed);
+			}
 		}
 		
 		/* (non-Javadoc)
@@ -74,16 +99,18 @@ public class Commands {
 		 */
 		@Override
 		public void execute(long timeElapsed) {
-			if (location == 2) {
-				runFromMiddle();
+			if (location == 1 || location == 3) {
+				runFromSide(timeElapsed);
+			} else if (location == 2) {
+				runFromMiddle(timeElapsed);
 			} else {
-				runFromSide();
+				runStraight(timeElapsed);
 			}
 		}
 	}
 	
 	/**
-	 * Autonomous command that drives the robot forward and then turns right and drives forward again
+	 * Autonomous command that drives straight no matter what
 	 */
 	public class Straight implements AutonomousCommand {
 		private static final int timeToDriveStraight = 3100;
@@ -100,6 +127,9 @@ public class Commands {
 		}
 	}
 	
+	/**
+	 * Autonomous command that does nothing
+	 */
 	public class None implements AutonomousCommand {
 		@Override
 		public void execute(long timeElapsed) {
