@@ -36,13 +36,13 @@ public class ClimbSystem extends RobotSystem {
 	 */
 	@Override
 	public void run() {
-		if(input.shouldClimb() == true && input.shouldRetractArm() == true){
+		if(input.shouldClimb() && input.shouldRetractArm()){
 			//return if both buttons are pressed
 			return;
-		} else if(input.shouldClimb() == true){
+		} else if(input.shouldClimb()){
 			//climb by turning motor if Y button is pressed
 			setMotorSpeed(motorSpeed);
-		} else if(input.shouldRetractArm() == true){
+		} else if(input.shouldRetractArm()){
 			//turn the arm the other way in case of a screw-up
 			setMotorSpeed(-motorSpeed);
 		} else {
