@@ -22,7 +22,7 @@ public class AutonomousExecutor extends RunnableExecutor implements Initializabl
 		env = environ;
 
 		drivetrain = (WheelSystem) env.getSystem(Environment.WHEEL_SYSTEM);
-		initialTime = System.currentTimeMillis();
+		resetTime();
 	}
 	
 	public void setTask(AutonomousCommand command) {
@@ -42,6 +42,14 @@ public class AutonomousExecutor extends RunnableExecutor implements Initializabl
 	 */
 	public void updateTime() {
 		timeElapsed = findTimeElapsed();
+	}
+	
+	/**
+	 * Reset the elapsed time
+	 */
+	public void resetTime() {
+		initialTime = System.currentTimeMillis();
+		timeElapsed = 0;
 	}
 		
 	/* (non-Javadoc)
