@@ -4,9 +4,9 @@ import org.impact2585.lib2585.Drivetrain;
 import org.usfirst.frc.team2585.robot.Environment;
 import org.usfirst.frc.team2585.robot.RobotMap;
 
-import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.Victor;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 /**
  * This system controls the drivetrain of the robot
@@ -24,9 +24,9 @@ public class WheelSystem extends RobotSystem {
 	public void init(Environment environ) {
 		super.init(environ);
 
-		leftDrive = new Victor(RobotMap.LEFT_DRIVE_MOTOR);
-		rightDrive = new Victor(RobotMap.RIGHT_DRIVE_MOTOR);
-		RobotDrive botDrive = new RobotDrive(leftDrive, rightDrive);
+		leftDrive = new Spark(RobotMap.LEFT_DRIVE_MOTOR);
+		rightDrive = new Spark(RobotMap.RIGHT_DRIVE_MOTOR);
+		DifferentialDrive botDrive = new DifferentialDrive(leftDrive, rightDrive);
 
 		drive = new Drivetrain(botDrive);	
 	}
