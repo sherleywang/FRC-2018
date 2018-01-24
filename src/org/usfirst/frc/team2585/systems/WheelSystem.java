@@ -17,6 +17,10 @@ public class WheelSystem extends RobotSystem {
 	
 	Drivetrain drive;
 	
+	private final double leftPercentage = 0.65;
+	private final double rightPercentage = 0.65;
+
+	
 	/* (non-Javadoc)
 	 * @see org.usfirst.frc.team2585.systems.Initializable#init(org.usfirst.frc.team2585.Environment)
 	 */
@@ -26,6 +30,7 @@ public class WheelSystem extends RobotSystem {
 
 		leftDrive = new Spark(RobotMap.LEFT_DRIVE_MOTOR);
 		rightDrive = new Spark(RobotMap.RIGHT_DRIVE_MOTOR);
+				
 		DifferentialDrive botDrive = new DifferentialDrive(leftDrive, rightDrive);
 
 		drive = new Drivetrain(botDrive);	
@@ -43,7 +48,7 @@ public class WheelSystem extends RobotSystem {
 	 * @param rotation the amount to rotate
 	 */
 	public void driveWithRotation(double forward, double rotation) {
-		drive.arcadeControl(forward, rotation, false, false);
+		drive.arcadeDriveWithPercentages(forward, rotation, leftPercentage, rightPercentage);
 	}
 
 	/* (non-Javadoc)
