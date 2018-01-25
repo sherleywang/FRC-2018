@@ -13,14 +13,13 @@
   <!-- By default the system version of WPI is used -->
   <!-- <property name="version" value=""/> -->
 
-  <!-- By default the system team number is used -->
-  <!-- <property name="team-number" value=""/> -->
-
   <!-- By default the target is set to 10.TE.AM.2 -->
   <!-- <property name="target" value=""/> -->
 
   <!-- Any other property in build.properties can also be overridden. -->
 
+  <property name="team-number" value="2585"/>
+  
   <property file="${user.home}/wpilib/wpilib.properties"/>
   <property file="build.properties"/>
   <property file="${user.home}/wpilib/java/${version}/ant/build.properties"/>
