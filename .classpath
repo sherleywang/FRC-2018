@@ -15,5 +15,6 @@
 	<classpathentry kind="var" path="cscore" sourcepath="cscore.sources"/>
 	<classpathentry kind="var" path="wpiutil" sourcepath="wpiutil.sources"/>
 	<classpathentry kind="var" path="USERLIBS_DIR/Lib2585.jar"/>
+	<classpathentry kind="lib" path="lib/cscore.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

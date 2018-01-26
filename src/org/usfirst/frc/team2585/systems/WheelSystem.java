@@ -60,8 +60,8 @@ public class WheelSystem extends RobotSystem {
 			isMovingForward = false;
 		}
 		
-		leftDrive.set(leftPercentage * (forward + rotation));
-		rightDrive.set(rightPercentage * (forward - rotation));
+		leftDrive.set(-leftPercentage * (forward - rotation));
+		rightDrive.set(rightPercentage * (forward + rotation));
 	}
 	
 	/**
@@ -69,7 +69,7 @@ public class WheelSystem extends RobotSystem {
 	 */
 	private void calibrate() {
 		previousAngle = currentAngle;
-		currentAngle = gyro.getAngle();
+		currentAngle = -gyro.getAngle();
 		SmartDashboard.putNumber("Gyro Angle", currentAngle);
 		
 		if (isMovingForward) {
