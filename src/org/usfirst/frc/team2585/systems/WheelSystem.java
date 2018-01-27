@@ -1,5 +1,6 @@
 package org.usfirst.frc.team2585.systems;
 
+import org.impact2585.lib2585.RampedSpeedController;
 import org.usfirst.frc.team2585.robot.Environment;
 import org.usfirst.frc.team2585.robot.RobotMap;
 
@@ -13,8 +14,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * This system controls the drivetrain of the robot
  */
 public class WheelSystem extends RobotSystem {
-	private SpeedController rightDrive;
-	private SpeedController leftDrive;
+	private RampedSpeedController rightDrive;
+	private RampedSpeedController leftDrive;
 	
 	private ADXRS450_Gyro gyro;
 	
@@ -23,7 +24,7 @@ public class WheelSystem extends RobotSystem {
 	
 	private final double DEADZONE = 0.15;
 	
-	private boolean shouldBeRotating = false;
+	private boolean shouldHaveBeenRotating = false;
 	
 	/* (non-Javadoc)
 	 * @see org.usfirst.frc.team2585.systems.Initializable#init(org.usfirst.frc.team2585.Environment)
@@ -32,8 +33,8 @@ public class WheelSystem extends RobotSystem {
 	public void init(Environment environ) {
 		super.init(environ);
 
-		leftDrive = new Spark(RobotMap.LEFT_DRIVE_MOTOR);
-		rightDrive = new Spark(RobotMap.RIGHT_DRIVE_MOTOR);
+		leftDrive = new RampedSpeedController(new Spark(RobotMap.LEFT_DRIVE_MOTOR));
+		rightDrive = new RampedSpeedController(new Spark(RobotMap.RIGHT_DRIVE_MOTOR));
 								
 		gyro = new ADXRS450_Gyro();
 	}
@@ -55,18 +56,19 @@ public class WheelSystem extends RobotSystem {
 	 */
 	public void driveWithRotation(double forward, double rotation) {
 		forward *= -1; // reverse direction
-		if (rotation == 0) { // Should be moving straight
-			if (shouldBeRotating) { // If it wasn't moving straight before and just started moving straight
+		boolean shouldBeRotating = rotation != 0;
+		if (!shouldBeRotating) { // Should be moving straight
+			if (shouldHaveBeenRotating) { // If it wasn't moving straight before and just started moving straight
 				// Record the current angle
 				straightAngle = gyro.getAngle();
 			}
-			shouldBeRotating = false;
+			shouldHaveBeenRotating = false;
 			// Use gyro angle to correct movement
 			rotation = -(gyro.getAngle() - straightAngle) * angleMultiplier;
 			if (rotation < -0.8) rotation = -0.8;
 			if (rotation > 0.8) rotation = 0.8;
 		} else {
-			shouldBeRotating = true;
+			shouldHaveBeenRotating = true;
 		}
 		SmartDashboard.putNumber("Gyro Angle", gyro.getAngle());
 		SmartDashboard.putNumber("Gyro Rate", gyro.getRate());
@@ -78,8 +80,8 @@ public class WheelSystem extends RobotSystem {
 	}
 	
 	private void setSideSpeeds(double leftSpeed, double rightSpeed) {
-		leftDrive.set(leftSpeed);
-		rightDrive.set(-rightSpeed);
+		leftDrive.updateWithSpeed(leftSpeed);
+		rightDrive.updateWithSpeed(-rightSpeed);
 	}
 	
 	private void arcadeDrive(double forward, double rotation) {
@@ -107,11 +109,7 @@ public class WheelSystem extends RobotSystem {
 	 */
 	@Override
 	public void destroy() {
-		if (leftDrive instanceof PWM) {
-			((PWM) leftDrive).free();
-		}
-		if (rightDrive instanceof PWM) {
-			((PWM) rightDrive).free();
-		}
+		leftDrive.destroy();
+		rightDrive.destroy();
 	}
 }
