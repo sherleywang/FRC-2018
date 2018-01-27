@@ -33,28 +33,28 @@ public class Commands {
 	 * Move the robot forward with no rotation
 	 */
 	private static void driveForward() {
-		drivetrain.driveWithRotation(0.8, 0.0);
+		drivetrain.driveWithGyro(0.8, 0.0);
 	}
 	
 	/**
 	 * Turn the robot left with no forward movement
 	 */
 	private static void turnLeft() {
-		drivetrain.driveWithRotation(0.0, -0.2);
+		drivetrain.driveWithGyro(0.0, -0.2);
 	}
 	
 	/**
 	 * Turn the robot right with no forward movement
 	 */
 	private static void turnRight() {
-		drivetrain.driveWithRotation(0.0, 0.2);
+		drivetrain.driveWithGyro(0.0, 0.2);
 	}
 	
 	/**
 	 * Set the forward movement and rotation to 0
 	 */
 	private static void stop() {
-		drivetrain.driveWithRotation(0, 0);
+		drivetrain.driveWithGyro(0, 0);
 	}
 	
 	
