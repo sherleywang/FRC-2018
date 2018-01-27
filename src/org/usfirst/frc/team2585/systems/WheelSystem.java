@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -15,15 +16,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class WheelSystem extends RobotSystem {
 	private SpeedController rightDrive;
 	private SpeedController leftDrive;
+	private DifferentialDrive drivetrain;
 	
 	private ADXRS450_Gyro gyro;
 	
-	private double leftPercentage = 0.65;
-	private double rightPercentage = 0.65;
-	
-	private final double angleChangeWeight = 1.0;
-	private double previousAngle;
-	private double currentAngle;
+	private double straightAngle;
+	private double angleMultiplier = 0.03;
 	
 	private boolean isMovingForward = false;
 	
@@ -36,17 +34,17 @@ public class WheelSystem extends RobotSystem {
 
 		leftDrive = new Spark(RobotMap.LEFT_DRIVE_MOTOR);
 		rightDrive = new Spark(RobotMap.RIGHT_DRIVE_MOTOR);
+		
+		drivetrain = new DifferentialDrive(leftDrive, rightDrive);
 						
 		gyro = new ADXRS450_Gyro();
-		currentAngle = gyro.getAngle();
 	}
 	
 	/**
 	 * Pass the user inputs to the drive train to run the motors the appropriate amounts
 	 */
 	public void run() {
-		calibrate();
-		driveWithRotation(input.forwardAmount(), input.rotationAmount());
+		driveWithRotation(-input.forwardAmount(), input.rotationAmount());
 	}
 	
 	/**
@@ -54,38 +52,23 @@ public class WheelSystem extends RobotSystem {
 	 * @param rotation the amount to rotate
 	 */
 	public void driveWithRotation(double forward, double rotation) {
-		if (forward > 0 && rotation == 0) {
+		if (rotation == 0) { // Moving straight
+			// Use gyro angle to correct movement
+			if (!isMovingForward) {
+				// Record the current angle if turning just finished
+				straightAngle = gyro.getAngle();
+			}
 			isMovingForward = true;
+			
+			rotation = -(gyro.getAngle() - straightAngle) * angleMultiplier;
 		} else {
 			isMovingForward = false;
 		}
+		SmartDashboard.putNumber("Gyro Angle", gyro.getAngle());
+		SmartDashboard.putNumber("Forward Amount", forward);
+		SmartDashboard.putNumber("RotationAmount", rotation);
 		
-		leftDrive.set(-leftPercentage * (forward - rotation));
-		rightDrive.set(rightPercentage * (forward + rotation));
-	}
-	
-	/**
-	 * Calibrate the right and left sides based on the gyroscope data
-	 */
-	private void calibrate() {
-		previousAngle = currentAngle;
-		currentAngle = -gyro.getAngle();
-		SmartDashboard.putNumber("Gyro Angle", currentAngle);
-		
-		if (isMovingForward) {
-			double angleChange = currentAngle - previousAngle;
-			// Positive: veering left
-			// Negative: veering right
-			double weightedAngleChange = angleChange * angleChangeWeight;
-			if ((leftPercentage + weightedAngleChange < 1) && (rightPercentage - weightedAngleChange > 0)) {
-				leftPercentage = leftPercentage + weightedAngleChange;
-				rightPercentage = rightPercentage - weightedAngleChange;
-						
-			}
-			SmartDashboard.putNumber("RawAngleChange", angleChange);
-		}
-		SmartDashboard.putNumber("Left Percentage", leftPercentage);
-		SmartDashboard.putNumber("Right Percentage", rightPercentage);
+		drivetrain.arcadeDrive(forward, rotation, true);
 	}
 	
 	/* (non-Javadoc)
