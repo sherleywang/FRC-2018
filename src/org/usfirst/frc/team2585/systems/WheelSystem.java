@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -16,14 +15,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class WheelSystem extends RobotSystem {
 	private SpeedController rightDrive;
 	private SpeedController leftDrive;
-	private DifferentialDrive drivetrain;
 	
 	private ADXRS450_Gyro gyro;
 	
 	private double straightAngle;
-	private double angleMultiplier = 0.03;
+	private double angleMultiplier = 0.015;
 	
-	private boolean isMovingForward = false;
+	private final double DEADZONE = 0.15;
+	
+	private boolean shouldBeRotating = false;
 	
 	/* (non-Javadoc)
 	 * @see org.usfirst.frc.team2585.systems.Initializable#init(org.usfirst.frc.team2585.Environment)
@@ -34,9 +34,7 @@ public class WheelSystem extends RobotSystem {
 
 		leftDrive = new Spark(RobotMap.LEFT_DRIVE_MOTOR);
 		rightDrive = new Spark(RobotMap.RIGHT_DRIVE_MOTOR);
-		
-		drivetrain = new DifferentialDrive(leftDrive, rightDrive);
-						
+								
 		gyro = new ADXRS450_Gyro();
 	}
 	
@@ -44,7 +42,11 @@ public class WheelSystem extends RobotSystem {
 	 * Pass the user inputs to the drive train to run the motors the appropriate amounts
 	 */
 	public void run() {
-		driveWithRotation(-input.forwardAmount() * 0.8, input.rotationAmount() * 0.8);
+		double forward = input.forwardAmount();
+		forward = (Math.abs(forward) > DEADZONE)? forward * 0.8 : 0;
+		double rotation = input.rotationAmount();
+		rotation = (Math.abs(rotation) > DEADZONE)? rotation * 0.8 : 0;
+		driveWithRotation(forward, rotation);
 	}
 	
 	/**
@@ -52,23 +54,44 @@ public class WheelSystem extends RobotSystem {
 	 * @param rotation the amount to rotate
 	 */
 	public void driveWithRotation(double forward, double rotation) {
-		if (rotation == 0) { // Moving straight
-			// Use gyro angle to correct movement
-			if (!isMovingForward) {
-				// Record the current angle if turning just finished
+		forward *= -1; // reverse direction
+		if (rotation == 0) { // Should be moving straight
+			if (shouldBeRotating) { // If it wasn't moving straight before and just started moving straight
+				// Record the current angle
 				straightAngle = gyro.getAngle();
 			}
-			isMovingForward = true;
-			
+			shouldBeRotating = false;
+			// Use gyro angle to correct movement
 			rotation = -(gyro.getAngle() - straightAngle) * angleMultiplier;
+			if (rotation < -0.8) rotation = -0.8;
+			if (rotation > 0.8) rotation = 0.8;
 		} else {
-			isMovingForward = false;
+			shouldBeRotating = true;
 		}
 		SmartDashboard.putNumber("Gyro Angle", gyro.getAngle());
+		SmartDashboard.putNumber("Gyro Rate", gyro.getRate());
+		SmartDashboard.putNumber("Offset Angle", gyro.getAngle() - straightAngle);
 		SmartDashboard.putNumber("Forward Amount", forward);
 		SmartDashboard.putNumber("RotationAmount", rotation);
 		
-		drivetrain.arcadeDrive(forward, rotation, true);
+		arcadeDrive(forward, rotation);
+	}
+	
+	private void setSideSpeeds(double leftSpeed, double rightSpeed) {
+		leftDrive.set(leftSpeed);
+		rightDrive.set(-rightSpeed);
+	}
+	
+	private void arcadeDrive(double forward, double rotation) {
+		double leftSpeed = forward + rotation;
+		double rightSpeed = forward - rotation;
+		setSideSpeeds(leftSpeed, rightSpeed);
+		
+		SmartDashboard.putNumber("LEFT SPEED FINAL", leftSpeed);
+		SmartDashboard.putNumber("RIGHT SPEED FINAL", rightSpeed);
+		
+		SmartDashboard.putBoolean("SPEEDS ARE EQUAl", leftSpeed == rightSpeed);
+		SmartDashboard.putBoolean("SPEEDS ARE OPPOSITE", leftSpeed == -rightSpeed);
 	}
 	
 	/* (non-Javadoc)
