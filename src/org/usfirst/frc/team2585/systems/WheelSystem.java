@@ -44,7 +44,7 @@ public class WheelSystem extends RobotSystem {
 	 * Pass the user inputs to the drive train to run the motors the appropriate amounts
 	 */
 	public void run() {
-		driveWithRotation(-input.forwardAmount(), input.rotationAmount());
+		driveWithRotation(-input.forwardAmount() * 0.8, input.rotationAmount() * 0.8);
 	}
 	
 	/**
