@@ -26,6 +26,8 @@ public class WheelSystem extends RobotSystem {
 	private final double FORWARD_MULTIPLIER = 0.65;
 	private final double ROTATION_MULTIPLIER = 0.5;
 	
+	public static boolean IS_TEST_SYSTEM = false;
+	
 		
 	/* (non-Javadoc)
 	 * @see org.usfirst.frc.team2585.systems.Initializable#init(org.usfirst.frc.team2585.Environment)
@@ -44,7 +46,7 @@ public class WheelSystem extends RobotSystem {
 	 * Pass the user inputs to the drive train to run the motors the appropriate amounts
 	 */
 	public void run() {
-		double forward = input.forwardAmount();
+		double forward = -input.forwardAmount(); // reverse direction of driving
 		forward = (Math.abs(forward) > DEADZONE)? forward * FORWARD_MULTIPLIER : 0;
 		double rotation = input.rotationAmount();
 		rotation = (Math.abs(rotation) > DEADZONE)? rotation * ROTATION_MULTIPLIER : 0;
@@ -56,14 +58,12 @@ public class WheelSystem extends RobotSystem {
 	 * @param forwardInput the amount to drive forward
 	 * @param rotationInput the amount to rotate
 	 */
-	public void driveWithGyro(double forwardInput, double rotationInput) {
-		forwardInput *= -1; // reverse direction of driving
-		
+	public void driveWithGyro(double forwardInput, double rotationInput) {		
 		double correction = 0;
 		
 		// Driving with no rotation is the only time when correction should be used
 		if (forwardInput !=0 && rotationInput != 0) {
-			correction = (gyro.getAngle() - straightAngle) * CORRECTION_MULTIPLIER;
+			correction = (getGyroAngle() - straightAngle) * CORRECTION_MULTIPLIER;
 			
 			// Keep correction within range
 			if (correction < -MAX_CORRECTION) {
@@ -73,16 +73,18 @@ public class WheelSystem extends RobotSystem {
 			}
 		} else {
 			// Use the current angle as the direction of 'straight'
-			straightAngle = gyro.getAngle();
+			straightAngle = getGyroAngle();
 		}
 		
 		arcadeDrive(forwardInput, rotationInput - correction);
 		
-		SmartDashboard.putNumber("Gyro Angle", gyro.getAngle());
-		SmartDashboard.putNumber("Gyro Rate", gyro.getRate());
-		SmartDashboard.putNumber("Offset Angle", gyro.getAngle() - straightAngle);
-		SmartDashboard.putNumber("Forward Amount", forwardInput);
-		SmartDashboard.putNumber("RotationAmount", rotationInput);
+		if (!IS_TEST_SYSTEM) {
+			SmartDashboard.putNumber("Gyro Angle",  getGyroAngle());
+			SmartDashboard.putNumber("Gyro Rate", getGyroRate());
+			SmartDashboard.putNumber("Offset Angle", getGyroAngle() - straightAngle);
+			SmartDashboard.putNumber("Forward Amount", forwardInput);
+			SmartDashboard.putNumber("RotationAmount", rotationInput);
+		}
 	}
 	
 	private void setSideSpeeds(double leftSpeed, double rightSpeed) {
@@ -92,17 +94,27 @@ public class WheelSystem extends RobotSystem {
 		leftDrive.updateWithSpeed(leftSpeed);
 		rightDrive.updateWithSpeed(-rightSpeed);
 		
-		SmartDashboard.putNumber("LEFT SPEED RAW", leftSpeed);
-		SmartDashboard.putNumber("RIGHT SPEED RAW", rightSpeed);
-		
-		SmartDashboard.putBoolean("SPEEDS ARE EQUAl", leftSpeed == rightSpeed);
-		SmartDashboard.putBoolean("SPEEDS ARE OPPOSITE", leftSpeed == -rightSpeed);
+		if (!IS_TEST_SYSTEM) {
+			SmartDashboard.putNumber("LEFT SPEED RAW", leftSpeed);
+			SmartDashboard.putNumber("RIGHT SPEED RAW", rightSpeed);
+			
+			SmartDashboard.putBoolean("SPEEDS ARE EQUAl", leftSpeed == rightSpeed);
+			SmartDashboard.putBoolean("SPEEDS ARE OPPOSITE", leftSpeed == -rightSpeed);
+		}
 	}
 	
 	public void arcadeDrive(double forward, double rotation) {
 		double leftSpeed = forward + rotation;
 		double rightSpeed = forward - rotation;
 		setSideSpeeds(leftSpeed, rightSpeed);
+	}
+	
+	public double getGyroAngle() {
+		return gyro.getAngle();
+	}
+	
+	public double getGyroRate() {
+		return gyro.getRate();
 	}
 	
 	/* (non-Javadoc)

@@ -20,6 +20,8 @@ public class WheelSystemTest {
 	private double forwardAmountOutput;
 	private double rotationAmountOutput;
 	
+	private double gyroAngle;
+	
 	/**
 	 * Set up the wheel system for testing and initialize inputs to 0
 	 */
@@ -28,6 +30,7 @@ public class WheelSystemTest {
 		input = new TestInput();
 		newWheelSystem();
 		resetInput();
+		gyroAngle = 0;
 	}
 	
 	/**
@@ -35,6 +38,7 @@ public class WheelSystemTest {
 	 */
 	public void newWheelSystem() {
 		wheelSystem = new TestWheelSystem();
+		TestWheelSystem.IS_TEST_SYSTEM = true;
 		wheelSystem.setInput(input);
 	}
 	
@@ -198,6 +202,7 @@ public class WheelSystemTest {
 		forwardAmountInput = 1;
 		rotationAmountInput = 1;
 		wheelSystem.run();
+		
 		Assert.assertTrue(forwardAmountOutput > 0);
 		Assert.assertTrue(rotationAmountOutput > 0);
 		forwardAmountInput = -1;
@@ -226,10 +231,16 @@ public class WheelSystemTest {
 	 * A testable wheel system
 	 */
 	private class TestWheelSystem extends WheelSystem {
+		
 		@Override
 		public void arcadeDrive(double forward, double rotation){
-			forwardAmountOutput = forward;
+			forwardAmountOutput = -forward; // direction is reversed
 			rotationAmountOutput = rotation;
+		}
+		
+		@Override
+		public double getGyroAngle() {
+			return gyroAngle;
 		}
 	}
 }
