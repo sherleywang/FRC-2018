@@ -99,7 +99,7 @@ public class WheelSystem extends RobotSystem {
 		SmartDashboard.putBoolean("SPEEDS ARE OPPOSITE", leftSpeed == -rightSpeed);
 	}
 	
-	private void arcadeDrive(double forward, double rotation) {
+	public void arcadeDrive(double forward, double rotation) {
 		double leftSpeed = forward + rotation;
 		double rightSpeed = forward - rotation;
 		setSideSpeeds(leftSpeed, rightSpeed);
