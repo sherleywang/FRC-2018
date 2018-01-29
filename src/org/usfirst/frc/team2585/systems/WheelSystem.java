@@ -17,14 +17,13 @@ public class WheelSystem extends RobotSystem {
 	
 	private ADXRS450_Gyro gyro;
 	
-	private double straightAngle;
+	private double targetAngle;
 	
 	private final double DEADZONE = 0.15;
 	private final double CORRECTION_MULTIPLIER = 0.015;
-	private final double MAX_CORRECTION = 0.4;
 	
 	private final double FORWARD_MULTIPLIER = 0.65;
-	private final double ROTATION_MULTIPLIER = 0.5;
+	private final double ROTATION_RATE = 0.5;
 	
 	public static boolean IS_TEST_SYSTEM = false;
 	
@@ -39,6 +38,7 @@ public class WheelSystem extends RobotSystem {
 		leftDrive = new RampedSpeedController(new Spark(RobotMap.LEFT_DRIVE_MOTOR));
 		rightDrive = new RampedSpeedController(new Spark(RobotMap.RIGHT_DRIVE_MOTOR));
 								
+		targetAngle = getGyroAngle();
 		gyro = new ADXRS450_Gyro();
 	}
 	
@@ -49,7 +49,7 @@ public class WheelSystem extends RobotSystem {
 		double forward = -input.forwardAmount(); // reverse direction of driving
 		forward = (Math.abs(forward) > DEADZONE)? forward * FORWARD_MULTIPLIER : 0;
 		double rotation = input.rotationAmount();
-		rotation = (Math.abs(rotation) > DEADZONE)? rotation * ROTATION_MULTIPLIER : 0;
+		rotation = (Math.abs(rotation) > DEADZONE)? rotation : 0;
 		driveWithGyro(forward, rotation);
 	}
 	
@@ -59,29 +59,18 @@ public class WheelSystem extends RobotSystem {
 	 * @param rotationInput the amount to rotate
 	 */
 	public void driveWithGyro(double forwardInput, double rotationInput) {		
-		double correction = 0;
+		// Adjust Target Angle
+		targetAngle -= rotationInput * ROTATION_RATE;
 		
-		// Driving with no rotation is the only time when correction should be used
-		if (forwardInput !=0 && rotationInput != 0) {
-			correction = (getGyroAngle() - straightAngle) * CORRECTION_MULTIPLIER;
-			
-			// Keep correction within range
-			if (correction < -MAX_CORRECTION) {
-				correction = -MAX_CORRECTION;
-			} else if (correction > MAX_CORRECTION) {
-				correction = MAX_CORRECTION;
-			}
-		} else {
-			// Use the current angle as the direction of 'straight'
-			straightAngle = getGyroAngle();
-		}
+		// Rotate towards target
+		double correction = (getGyroAngle() - targetAngle) * CORRECTION_MULTIPLIER;
 		
 		arcadeDrive(forwardInput, rotationInput - correction);
 		
 		if (!IS_TEST_SYSTEM) {
 			SmartDashboard.putNumber("Gyro Angle",  getGyroAngle());
 			SmartDashboard.putNumber("Gyro Rate", getGyroRate());
-			SmartDashboard.putNumber("Offset Angle", getGyroAngle() - straightAngle);
+			SmartDashboard.putNumber("Offset Angle", getGyroAngle() - targetAngle);
 			SmartDashboard.putNumber("Forward Amount", forwardInput);
 			SmartDashboard.putNumber("RotationAmount", rotationInput);
 		}
