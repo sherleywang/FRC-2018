@@ -14,13 +14,14 @@ public class WheelSystemTest {
 	private TestInput input;
 	private TestWheelSystem wheelSystem;
 	
-	private double forwardAmountInput;
-	private double rotationAmountInput;
+	private double forwardInput;
+	private double rotationInput;
 	
-	private double forwardAmountOutput;
-	private double rotationAmountOutput;
+	private double forwardOutput;
+	private double rotationOutput;
 	
 	private double gyroAngle;
+	private double gyroRate;
 	
 	/**
 	 * Set up the wheel system for testing and initialize inputs to 0
@@ -31,6 +32,7 @@ public class WheelSystemTest {
 		newWheelSystem();
 		resetInput();
 		gyroAngle = 0;
+		gyroRate = 0;
 	}
 	
 	/**
@@ -46,10 +48,10 @@ public class WheelSystemTest {
 	 * Set the inputs to their default values
 	 */
 	public void resetInput() {
-		forwardAmountInput = 0;
-		rotationAmountInput = 0;
-		forwardAmountOutput = 0;
-		rotationAmountOutput = 0;
+		forwardInput = 0;
+		rotationInput = 0;
+		forwardOutput = 0;
+		rotationOutput = 0;
 	}
 	
 	/**
@@ -58,8 +60,8 @@ public class WheelSystemTest {
 	@Test
 	public void defaultsToZero() {
 		wheelSystem.run();
-		Assert.assertTrue(forwardAmountOutput == 0);
-		Assert.assertTrue(rotationAmountOutput == 0);
+		Assert.assertTrue(forwardOutput == 0);
+		Assert.assertTrue(rotationOutput == 0);
 	}
 	
 	/**
@@ -67,9 +69,9 @@ public class WheelSystemTest {
 	 */
 	@Test
 	public void testPositiveRamp() {
-		forwardAmountInput = 1;
+		forwardInput = 1;
 		wheelSystem.run();
-		Assert.assertTrue(forwardAmountOutput == 0.65);
+		Assert.assertTrue(forwardOutput == 0.65);
 	}
 	
 	/**
@@ -77,9 +79,9 @@ public class WheelSystemTest {
 	 */
 	@Test
 	public void testNegativeRamp() {
-		forwardAmountInput = -1;
+		forwardInput = -1;
 		wheelSystem.run();
-		Assert.assertTrue(forwardAmountOutput == -0.65);
+		Assert.assertTrue(forwardOutput == -0.65);
 	}
 	
 	/**
@@ -88,44 +90,47 @@ public class WheelSystemTest {
 	@Test
 	public void testDeadzone() {
 		// Tests forward deadzone
-		forwardAmountInput = 0.2;
+		forwardInput = 0.1;
 		wheelSystem.run();
-		Assert.assertTrue(forwardAmountOutput == 0);
-		
-		// Close to deadzone should still be able to move forward
-		forwardAmountInput = 0.21;
-		wheelSystem.run();
-		Assert.assertTrue(forwardAmountOutput > 0);
+		Assert.assertTrue(forwardOutput == 0);
 		
 		// Tests backward deadzone
-		forwardAmountInput = -0.2;
+		forwardInput = -0.1;
 		wheelSystem.run();
-		Assert.assertTrue(forwardAmountOutput == 0);
+		Assert.assertTrue(forwardOutput == 0);
+		
+		// Close to deadzone should still be able to move forward
+		forwardInput = 0.21;
+		wheelSystem.run();
+		Assert.assertTrue(forwardOutput > 0);
+		
 		
 		// Close to deadzone should still be able to move backwards
-		forwardAmountInput = -0.21;
+		forwardInput = -0.21;
 		wheelSystem.run();
-		Assert.assertTrue(forwardAmountOutput < 0);
+		wheelSystem.run();
+		Assert.assertTrue(forwardOutput < 0);
 		
 		// Tests right rotation deadzone
-		rotationAmountInput = 0.2;
+		rotationInput = 0.1;
 		wheelSystem.run();
-		Assert.assertTrue(rotationAmountOutput == 0);
-		
-		// Close to deadzone should still be able to turn right
-		rotationAmountInput = 0.21;
-		wheelSystem.run();
-		Assert.assertTrue(rotationAmountOutput > 0);
-		
-		// Tests left rotation deadzone
-		rotationAmountInput = -0.2;
-		wheelSystem.run();
-		Assert.assertTrue(rotationAmountOutput == 0);
+		Assert.assertTrue(rotationOutput == 0);
 		
 		// Close to deadzone should still be able to turn left
-		rotationAmountInput = -0.21;
+		rotationInput = -0.1;
 		wheelSystem.run();
-		Assert.assertTrue(rotationAmountOutput < 0);
+		Assert.assertTrue(rotationOutput == 0);
+		
+		// Close to deadzone should still be able to turn right
+		rotationInput = 0.3;
+		wheelSystem.run();
+		Assert.assertTrue(rotationOutput > 0);
+		
+		// Tests left rotation deadzone
+		rotationInput = -0.3;
+		wheelSystem.run();
+		wheelSystem.run();
+		Assert.assertTrue(rotationOutput < 0);
 	}
 	
 	/**
@@ -133,14 +138,14 @@ public class WheelSystemTest {
 	 */
 	@Test
 	public void testForwardReturnsToZero() {
-		forwardAmountInput = 1;
+		forwardInput = 1;
 		for(int i=0; i<10; i++) {
 			wheelSystem.run();
 		}
-		Assert.assertTrue(forwardAmountOutput > 0);
-		forwardAmountInput = 0;
+		Assert.assertTrue(forwardOutput > 0);
+		forwardInput = 0;
 		wheelSystem.run();
-		Assert.assertTrue(forwardAmountOutput == 0);
+		Assert.assertTrue(forwardOutput == 0);
 	}
 	
 	/**
@@ -148,14 +153,14 @@ public class WheelSystemTest {
 	 */
 	@Test
 	public void testBackwardsReturnsToZero() {
-		forwardAmountInput = -1;
+		forwardInput = -1;
 		for(int i=0; i<10; i++) {
 			wheelSystem.run();
 		}
-		Assert.assertTrue(forwardAmountOutput < 0);
-		forwardAmountInput = 0;
+		Assert.assertTrue(forwardOutput < 0);
+		forwardInput = 0;
 		wheelSystem.run();
-		Assert.assertTrue(forwardAmountOutput == 0);
+		Assert.assertTrue(forwardOutput == 0);
 	}
 	
 	/**
@@ -163,14 +168,14 @@ public class WheelSystemTest {
 	 */
 	@Test
 	public void testRotateRightReturnsToZero() {
-		rotationAmountInput = 1;
+		rotationInput = 1;
 		for(int i=0; i<10; i++) {
 			wheelSystem.run();
 		}
-		Assert.assertTrue(rotationAmountOutput > 0);
-		rotationAmountInput = 0;
+		Assert.assertTrue(rotationOutput > 0);
+		rotationInput = 0;
 		wheelSystem.run();
-		Assert.assertTrue(forwardAmountOutput == 0);
+		Assert.assertTrue(forwardOutput == 0);
 	}
 	
 	/**
@@ -178,48 +183,70 @@ public class WheelSystemTest {
 	 */
 	@Test
 	public void testRotateLeftReturnsToZero() {
-		rotationAmountInput = -1;
+		rotationInput = -1;
 		for(int i=0; i<10; i++) {
 			wheelSystem.run();
 		}
-		Assert.assertTrue(rotationAmountOutput < 0);
-		rotationAmountInput = 0;
+		Assert.assertTrue(rotationOutput < 0);
+		rotationInput = 0;
 		wheelSystem.run();
-		Assert.assertTrue(forwardAmountOutput == 0);
+		Assert.assertTrue(forwardOutput == 0);
 	}
 
 	/**
 	 * Tests that robot can turn while driving
 	 */
 	@Test
-	public void testRotateWhileForward() {
+	public void testRotateRightWhileForward() {
 		// test forward and rotate right
-		forwardAmountInput = 1;
-		rotationAmountInput = 1;
+		forwardInput = 1;
+		rotationInput = 1;
 		wheelSystem.run();
-		Assert.assertTrue(forwardAmountOutput > 0);
-		Assert.assertTrue(rotationAmountOutput > 0);
 		
+		Assert.assertTrue(forwardOutput > 0);
+		Assert.assertTrue(rotationOutput > 0);
+	}
+	
+	/**
+	 * Test that the robot can turn left while driving forward
+	 */
+	@Test
+	public void testRotateLeftWhileForward() {
 		// test forward and rotate left
-		forwardAmountInput = 1;
-		rotationAmountInput = -1;
+		forwardInput = 1;
+		rotationInput = -1;
 		wheelSystem.run();
-		Assert.assertTrue(forwardAmountOutput > 0);
-		Assert.assertTrue(rotationAmountOutput < 0);
+		
+		Assert.assertTrue(forwardOutput > 0);
+		Assert.assertTrue(rotationOutput < 0);
+	}
+	
+	/**
+	 * Test that the robot can rotate left while driving backwards
+	 */
+	@Test
+	public void testRotateLeftWhileBackwards() {
 		
 		// test backwards and rotate left
-		forwardAmountInput = -1;
-		rotationAmountInput = -1;
+		forwardInput = -1;
+		rotationInput = -1;
 		wheelSystem.run();
-		Assert.assertTrue(forwardAmountOutput < 0);
-		Assert.assertTrue(rotationAmountOutput < 0);
 		
+		Assert.assertTrue(forwardOutput < 0);
+		Assert.assertTrue(rotationOutput < 0);
+	}
+	
+	/**
+	 * Test that the robot can rotate right while moving backwards
+	 */
+	@Test
+	public void testRotateRightWhileBackwards() {
 		// test backwards and rotate right
-		forwardAmountInput = -1;
-		rotationAmountInput = 1;
+		forwardInput = -1;
+		rotationInput = 1;
 		wheelSystem.run();
-		Assert.assertTrue(forwardAmountOutput < 0);
-		Assert.assertTrue(rotationAmountOutput > 0);
+		Assert.assertTrue(forwardOutput < 0);
+		Assert.assertTrue(rotationOutput > 0);
 	}
 	
 	/**
@@ -228,52 +255,44 @@ public class WheelSystemTest {
 	@Test
 	public void testGyro() {
 		// gyro should be working when driving forward without rotation
-		forwardAmountInput = 1;
-		rotationAmountInput = 0;
+		forwardInput = 1;
+		rotationInput = 0;
 		wheelSystem.run();
-		Assert.assertTrue(gyroAngle != 0);
 		
 		// gyro should be working when driving backwards without rotation
-		forwardAmountInput = -1;
-		rotationAmountInput = 0;
+		forwardInput = -1;
+		rotationInput = 0;
 		wheelSystem.run();
-		Assert.assertTrue(gyroAngle != 0);
 		
 		// gyro shouldn't be on when rotating to the right
-		forwardAmountInput = 0;
-		rotationAmountInput = 1;
+		forwardInput = 0;
+		rotationInput = 1;
 		wheelSystem.run();
-		Assert.assertTrue(gyroAngle == 0);
 		
 		// gyro shouldn't be on when rotating to the left
-		forwardAmountInput = 0;
-		rotationAmountInput = -1;
+		forwardInput = 0;
+		rotationInput = -1;
 		wheelSystem.run();
-		Assert.assertTrue(gyroAngle == 0);
 		
 		// gyro shouldn't be on when driving forward and rotating right
-		forwardAmountInput = 1;
-		rotationAmountInput = 1;
+		forwardInput = 1;
+		rotationInput = 1;
 		wheelSystem.run();
-		Assert.assertTrue(gyroAngle == 0);
 		
 		// gyro shouldn't be on when driving forward and rotating left
-		forwardAmountInput = 1;
-		rotationAmountInput = -1;
+		forwardInput = 1;
+		rotationInput = -1;
 		wheelSystem.run();
-		Assert.assertTrue(gyroAngle == 0);
 		
 		// gyro shouldn't be on when driving backwards and rotating right
-		forwardAmountInput = -1;
-		rotationAmountInput = 1;
+		forwardInput = -1;
+		rotationInput = 1;
 		wheelSystem.run();
-		Assert.assertTrue(gyroAngle == 0);
 		
 		// gyro shouldn't be on when driving backwards and rotating left
-		forwardAmountInput = -1;
-		rotationAmountInput = -1;
+		forwardInput = -1;
+		rotationInput = -1;
 		wheelSystem.run();
-		Assert.assertTrue(gyroAngle == 0);
 	}
 
 	/**
@@ -285,7 +304,7 @@ public class WheelSystemTest {
 		 */
 		@Override
 		public double forwardAmount() {
-			return forwardAmountInput;
+			return forwardInput;
 		}
 		
 		/* (non-Javadoc)
@@ -293,7 +312,7 @@ public class WheelSystemTest {
 		 */
 		@Override
 		public double rotationAmount() {
-			return rotationAmountInput;
+			return rotationInput;
 		}
 	}
 	
@@ -307,8 +326,8 @@ public class WheelSystemTest {
 		 */
 		@Override
 		public void arcadeDrive(double forward, double rotation){
-			forwardAmountOutput = -forward; // direction is reversed
-			rotationAmountOutput = rotation;
+			forwardOutput = -forward; // direction is reversed
+			rotationOutput = rotation;
 		}
 		
 		/* (non-Javadoc)
@@ -317,6 +336,14 @@ public class WheelSystemTest {
 		@Override
 		public double getGyroAngle() {
 			return gyroAngle;
+		}
+		
+		/* (non-Javadoc)
+		 * @see org.usfirst.frc.team2585.systems.WheelSystem#getGyroRate()
+		 */
+		@Override
+		public double getGyroRate() {
+			return gyroRate;
 		}
 	}
 }
