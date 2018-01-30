@@ -112,7 +112,7 @@ public class WheelSystem extends RobotSystem {
 	 * @param forward the amount to drive forward
 	 * @param rotation the amount to rotate
 	 */
-	public void arcadeDrive(double forward, double rotation) {
+	protected void arcadeDrive(double forward, double rotation) {
 		double leftSpeed = forward + rotation;
 		double rightSpeed = forward - rotation;
 		setSideSpeeds(leftSpeed, rightSpeed);
@@ -121,7 +121,7 @@ public class WheelSystem extends RobotSystem {
 	/**
 	 * @return the current angle that the robot is facing from the gyroscope
 	 */
-	public double getGyroAngle() {
+	protected double getGyroAngle() {
 		return gyro.getAngle();
 	}
 	
