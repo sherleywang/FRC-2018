@@ -63,7 +63,14 @@ public class Commands {
 	 */
 	public class Main implements AutonomousCommand {
 		
-		private static final int timeToDriveStraight = 3100;
+		private static final int timeToDriveStraight = 2000;
+		private int tasksComplete = 0;
+		private boolean shouldResetTime = false;
+		
+		private void markTaskComplete() {
+			tasksComplete ++;
+			shouldResetTime = true;
+		}
 		
 		private void runStraight(long timeElapsed) {
 			if (timeElapsed < timeToDriveStraight) {
@@ -74,14 +81,42 @@ public class Commands {
 		}
 		
 		private void runFromMiddle(long timeElapsed){
+			int delayTime = 2000;
+			int timeToSwitch = 2000;
+			int moveLeftTime = 1000;
+			int moveRightTime = 1100;
+			int secondForwardTime = 1000;
+			
 			if(gameData.length() < 1){
 				runStraight(timeElapsed);
-			} else if(gameData.charAt(0) == 'L'){
-				
-			} else if(gameData.charAt(0) == 'R'){
-				
-			}
+			} else {
+				switch (tasksComplete) {
+				case 0: // DELAY
+					if (timeElapsed > delayTime) {
+						markTaskComplete();
+					} 	
+					
+				case 1: // MOVE FORWARD 
+					if (timeElapsed < timeToSwitch/2) {
+						Commands.driveForward();
+					} else {
+						markTaskComplete();
+					}
+					
+				case 2: // ROTATE 
+					if (gameData.charAt(0) == 'L') { // Switch on left side
+						
+					}
+				}
+					
+//				if(gameData.charAt(0) == 'L'){
+//				
+//				} else if(gameData.charAt(0) == 'R'){ {
+//				
+//				}
+			}				
 		}
+
 		private void runFromSide(long timeElapsed){
 			if(gameData.length() < 1){
 				runStraight(timeElapsed);
@@ -98,7 +133,8 @@ public class Commands {
 		 * @see org.usfirst.frc.team2585.AutonomousCommand#execute(long)
 		 */
 		@Override
-		public void execute(long timeElapsed) {
+		public boolean execute(long timeElapsed) {
+			shouldResetTime = false;
 			if (location == 1 || location == 3) {
 				runFromSide(timeElapsed);
 			} else if (location == 2) {
@@ -106,6 +142,7 @@ public class Commands {
 			} else {
 				runStraight(timeElapsed);
 			}
+			return shouldResetTime;
 		}
 	}
 	
@@ -118,12 +155,13 @@ public class Commands {
 		 * @see org.usfirst.frc.team2585.AutonomousCommand#execute(long)
 		 */
 		@Override
-		public void execute(long timeElapsed) {
+		public boolean execute(long timeElapsed) {
 			if (timeElapsed < timeToDriveStraight) {
 				driveForward();
 			} else {
 				stop();
 			}
+			return false;
 		}
 	}
 	
@@ -132,8 +170,9 @@ public class Commands {
 	 */
 	public class None implements AutonomousCommand {
 		@Override
-		public void execute(long timeElapsed) {
+		public boolean execute(long timeElapsed) {
 			stop();
+			return false;
 		}
 	}
 }

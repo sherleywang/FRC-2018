@@ -5,7 +5,8 @@ package org.usfirst.frc.team2585.robot;
  */
 public interface AutonomousCommand {
 	/**
-	 * @param timeElapsed time passed since auton started
+	 * @param timeElapsed time passed since the last task was completed
+	 * @return whether time should be reset
 	 */
-	public void execute(long timeElapsed);
+	public boolean execute(long timeElapsed);
 }

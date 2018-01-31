@@ -60,6 +60,9 @@ public class AutonomousExecutor extends RunnableExecutor implements Initializabl
 	 */
 	public void execute() {
 		updateTime();
-		task.execute(timeElapsed); // Execute is an abstract method
+		boolean shouldResetTime = task.execute(timeElapsed); // Execute is an abstract method
+		if (shouldResetTime) {
+			resetTime();
+		}
 	}
 }
