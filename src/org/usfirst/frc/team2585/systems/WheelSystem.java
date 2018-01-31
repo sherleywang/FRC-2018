@@ -137,6 +137,7 @@ public class WheelSystem extends RobotSystem {
 	 */
 	public void resetGyro() {
 		gyro.reset();
+		targetAngle = gyro.getAngle();
 	}
 	
 	/* (non-Javadoc)
