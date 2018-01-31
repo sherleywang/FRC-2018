@@ -33,7 +33,7 @@ public class Commands {
 	 * Move the robot forward with no rotation
 	 */
 	private static void driveForward() {
-		drivetrain.driveWithGyro(0.8, 0.0);
+		drivetrain.driveWithGyro(0.25, 0.0);
 	}
 	
 	/**
@@ -113,7 +113,7 @@ public class Commands {
 	 * Autonomous command that drives straight no matter what
 	 */
 	public class Straight implements AutonomousCommand {
-		private static final int timeToDriveStraight = 3100;
+		private static final int timeToDriveStraight = 2000;
 		/* (non-Javadoc)
 		 * @see org.usfirst.frc.team2585.AutonomousCommand#execute(long)
 		 */

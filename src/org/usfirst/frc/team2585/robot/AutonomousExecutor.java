@@ -4,6 +4,8 @@ import org.impact2585.lib2585.RunnableExecutor;
 import org.usfirst.frc.team2585.systems.Initializable;
 import org.usfirst.frc.team2585.systems.WheelSystem;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 public class AutonomousExecutor extends RunnableExecutor implements Initializable {
 
 	private static final long serialVersionUID = -3678926207508995014L;
@@ -42,6 +44,7 @@ public class AutonomousExecutor extends RunnableExecutor implements Initializabl
 	 */
 	public void updateTime() {
 		timeElapsed = findTimeElapsed();
+		SmartDashboard.putNumber("Auton Time Elapsed", timeElapsed);
 	}
 	
 	/**

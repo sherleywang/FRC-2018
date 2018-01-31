@@ -132,6 +132,13 @@ public class WheelSystem extends RobotSystem {
 		return gyro.getRate();
 	}
 	
+	/**
+	 * Reset the angle of the gyroscope
+	 */
+	public void resetGyro() {
+		gyro.reset();
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.usfirst.frc.team2585.systems.RobotSystem#stop()
 	 */

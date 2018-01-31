@@ -1,6 +1,7 @@
 package org.usfirst.frc.team2585.robot;
 
 import org.impact2585.lib2585.ExecutorBasedRobot;
+import org.usfirst.frc.team2585.systems.WheelSystem;
 
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -32,8 +33,8 @@ public class Robot extends ExecutorBasedRobot {
 		environ = new Environment(this);
 		
 		commands = new Commands(environ);
-		chooser.addDefault("main", commands.new Main());
-		chooser.addObject("straight", commands.new Straight());
+		chooser.addDefault("straight", commands.new Straight());
+		chooser.addObject("main", commands.new Main());
 		chooser.addObject("none", commands.new None());
 		SmartDashboard.putData("Auton choices", chooser);
 		
@@ -46,10 +47,12 @@ public class Robot extends ExecutorBasedRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+		resetTargetAngle();
 		AutonomousCommand autoSelected = chooser.getSelected();
 		AutonomousExecutor executor = new AutonomousExecutor();
 		executor.init(environ);
 		executor.setTask(autoSelected);
+		SmartDashboard.putNumber("Auton Time", 0);
 		
 		setExecutor(executor);
 	}
@@ -59,7 +62,13 @@ public class Robot extends ExecutorBasedRobot {
 	 */
 	@Override 
 	public void teleopInit() {
+		resetTargetAngle();
 		setExecutor(new TeleopExecutor(environ));
+	}
+	
+	public void resetTargetAngle() {
+		WheelSystem wheels = (WheelSystem) environ.getSystem(Environment.WHEEL_SYSTEM);
+		wheels.resetGyro();
 	}
 
 	/**
