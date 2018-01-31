@@ -128,7 +128,7 @@ public class WheelSystem extends RobotSystem {
 	/**
 	 * @return the rate that the robot is rotating from the gyroscope
 	 */
-	public double getGyroRate() {
+	protected double getGyroRate() {
 		return gyro.getRate();
 	}
 	
