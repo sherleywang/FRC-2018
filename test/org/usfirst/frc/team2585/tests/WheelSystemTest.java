@@ -100,14 +100,13 @@ public class WheelSystemTest {
 		Assert.assertTrue(forwardOutput == 0);
 		
 		// Close to deadzone should still be able to move forward
-		forwardInput = 0.21;
+		forwardInput = 0.3;
 		wheelSystem.run();
 		Assert.assertTrue(forwardOutput > 0);
 		
 		
 		// Close to deadzone should still be able to move backwards
-		forwardInput = -0.21;
-		wheelSystem.run();
+		forwardInput = -0.3;
 		wheelSystem.run();
 		Assert.assertTrue(forwardOutput < 0);
 		
@@ -116,7 +115,7 @@ public class WheelSystemTest {
 		wheelSystem.run();
 		Assert.assertTrue(rotationOutput == 0);
 		
-		// Close to deadzone should still be able to turn left
+		// Tests left rotation deadzone
 		rotationInput = -0.1;
 		wheelSystem.run();
 		Assert.assertTrue(rotationOutput == 0);
@@ -126,7 +125,7 @@ public class WheelSystemTest {
 		wheelSystem.run();
 		Assert.assertTrue(rotationOutput > 0);
 		
-		// Tests left rotation deadzone
+		// Close to deadzone should still be able to turn left
 		rotationInput = -0.3;
 		wheelSystem.run();
 		wheelSystem.run();
@@ -245,6 +244,7 @@ public class WheelSystemTest {
 		forwardInput = -1;
 		rotationInput = 1;
 		wheelSystem.run();
+		
 		Assert.assertTrue(forwardOutput < 0);
 		Assert.assertTrue(rotationOutput > 0);
 	}
@@ -254,45 +254,14 @@ public class WheelSystemTest {
 	 */
 	@Test
 	public void testGyro() {
-		// gyro should be working when driving forward without rotation
-		forwardInput = 1;
-		rotationInput = 0;
+		// testing the gyro for positive values
+		gyroAngle = 90;
 		wheelSystem.run();
-		
-		// gyro should be working when driving backwards without rotation
-		forwardInput = -1;
-		rotationInput = 0;
+		Assert.assertTrue(rotationOutput < 0);
+		// testing the gyro for negative values
+		gyroAngle = -90;
 		wheelSystem.run();
-		
-		// gyro shouldn't be on when rotating to the right
-		forwardInput = 0;
-		rotationInput = 1;
-		wheelSystem.run();
-		
-		// gyro shouldn't be on when rotating to the left
-		forwardInput = 0;
-		rotationInput = -1;
-		wheelSystem.run();
-		
-		// gyro shouldn't be on when driving forward and rotating right
-		forwardInput = 1;
-		rotationInput = 1;
-		wheelSystem.run();
-		
-		// gyro shouldn't be on when driving forward and rotating left
-		forwardInput = 1;
-		rotationInput = -1;
-		wheelSystem.run();
-		
-		// gyro shouldn't be on when driving backwards and rotating right
-		forwardInput = -1;
-		rotationInput = 1;
-		wheelSystem.run();
-		
-		// gyro shouldn't be on when driving backwards and rotating left
-		forwardInput = -1;
-		rotationInput = -1;
-		wheelSystem.run();
+		Assert.assertTrue(rotationOutput > 0);
 	}
 
 	/**
