@@ -1,5 +1,6 @@
 package org.usfirst.frc.team2585.robot;
 
+import org.usfirst.frc.team2585.systems.IntakeSystem;
 import org.usfirst.frc.team2585.systems.WheelSystem;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -11,6 +12,7 @@ public class Commands {
 	
 	private static Environment environ;
 	private static WheelSystem drivetrain;
+	private static IntakeSystem intake;
 	
 	private String gameData;
 	private int location;
@@ -40,14 +42,14 @@ public class Commands {
 	 * Turn the robot left with no forward movement
 	 */
 	private static double turnLeft(double rotation) {
-		return drivetrain.gyroWithAuton(-rotation);
+		return drivetrain.rotateToAngle(-rotation);
 	}
 	
 	/**
 	 * Turn the robot right with no forward movement
 	 */
 	private static double turnRight(double rotation) {
-		return drivetrain.gyroWithAuton(rotation);
+		return drivetrain.rotateToAngle(rotation);
 	}
 	
 	/**
@@ -57,22 +59,40 @@ public class Commands {
 		drivetrain.driveWithGyro(0, 0);
 	}
 	
+	/**
+	 * Use the intake system to deposit a cube
+	 */
+	private static void depositCube() {
+		intake.depositCube();
+	}
+	
 	
 	/**
 	 * Autonomous command that drives according to its position and the side of its switch
 	 */
 	public class Main implements AutonomousCommand {
+		private int timeToDriveStraight = 2000;
+		private int timeToDepositCube = 2000;
+		private int timeInToSwitchFromSide = 200;
 		
-		private static final int timeToDriveStraight = 2000;
-		private static final int timeToSwitch = 1000;
 		private int tasksComplete = 0;
 		private boolean shouldResetTime = false;
 		
+		boolean onLeftWithSwitch = gameData.charAt(0) == 'L' && location == 1;
+		boolean onRightWithSwitch = gameData.charAt(0) == 'R' && location == 3;
+		
+		/**
+		 * Mark that a task has been complete
+		 */
 		private void markTaskComplete() {
 			tasksComplete++;
 			shouldResetTime = true;
 		}
 		
+		/**
+		 * Run straight the distance to the auton line
+		 * @param timeElapsed the time elapsed since the last task was completed
+		 */
 		private void runStraight(long timeElapsed) {
 			if (timeElapsed < timeToDriveStraight) {
 				driveForward();
@@ -81,6 +101,10 @@ public class Commands {
 			}
 		}
 		
+		/**
+		 * Run the auton starting from the middle driverstation
+		 * @param timeElapsed the time elapsed since the last task was completed
+		 */
 		private void runFromMiddle(long timeElapsed){
 			int delayTime = 2000;
 			int timeToSwitch = 2000;
@@ -96,80 +120,71 @@ public class Commands {
 					if (timeElapsed > delayTime) {
 						markTaskComplete();
 					} 	
+					break;
 					
 				case 1: // MOVE FORWARD 
 					if (timeElapsed < timeToSwitch/2) {
-						Commands.driveForward();
+						driveForward();
 					} else {
 						markTaskComplete();
 					}
+					break;
 					
 				case 2: // ROTATE 
 					if (gameData.charAt(0) == 'L') { // Switch on left side
 						
 					}
+					break;
+				default:
+					stop();
+					break;
 				}
-					
-//				if(gameData.charAt(0) == 'L'){
-//				
-//				} else if(gameData.charAt(0) == 'R'){ {
-//				
-//				}
 			}				
 		}
 
+		/**
+		 * Run the auton from the left or right driverstation
+		 * @param timeElapsed the time since the last task was completed
+		 */
 		private void runFromSide(long timeElapsed){
-			if(gameData.charAt(0) == 'L' && location == 1){
+			if (onLeftWithSwitch || onRightWithSwitch) {
 				switch(tasksComplete) {
-				case 0: //move forward
+				case 0: // MOVE FORWARD
 					if(timeElapsed < timeToDriveStraight){
 						driveForward();
 					} else {
 						markTaskComplete();
 					}
 					break;
-				case 1: //turn
-					if(turnRight(90.0) < 0.5){
-						markTaskComplete();
+				case 1: // TURN INWARDS
+					if (onLeftWithSwitch) {
+						if(Math.abs(turnRight(90.0)) < 0.5){
+							markTaskComplete();
+						}
+					} else if (onRightWithSwitch) {
+						if(Math.abs(turnLeft(90.0)) < 0.5){
+							markTaskComplete();
+						}
 					}
 					break;
-				case 2: //move forward to switch
-					if(timeElapsed < timeToSwitch){
+				case 2: // MOVE INWARDS TOWARDS SWITCH
+					if(timeElapsed < timeInToSwitchFromSide){
 						driveForward();
 					} else {
 						markTaskComplete();
 					}
 					break;
+				case 3: // DEPOSIT CUBE
+					if(timeElapsed < timeToDepositCube) {
+						depositCube();
+					} else {
+						markTaskComplete();
+					}
 				default:
 					stop();
 					break;
 				}
-			} else if(gameData.charAt(0) == 'R' && location == 3){
-				switch(tasksComplete) {
-				case 0: //move forward
-					if(timeElapsed < timeToDriveStraight){
-						driveForward();
-					} else {
-						markTaskComplete();
-					}
-					break;
-				case 1: //turn
-					if(turnLeft(90.0) < 0.5){
-						markTaskComplete();
-					}
-					break;
-				case 2: //move forward to switch
-					if(timeElapsed < timeToSwitch){
-						driveForward();
-					} else {
-						markTaskComplete();
-					}
-					break;
-				default:
-					stop();
-					break;
-				}
-			} else {
+			} else { // Switch is on the other side
 				runStraight(timeElapsed);
 			}
 		}
@@ -214,6 +229,9 @@ public class Commands {
 	 * Autonomous command that does nothing
 	 */
 	public class None implements AutonomousCommand {
+		/* (non-Javadoc)
+		 * @see org.usfirst.frc.team2585.robot.AutonomousCommand#execute(long)
+		 */
 		@Override
 		public boolean execute(long timeElapsed) {
 			stop();

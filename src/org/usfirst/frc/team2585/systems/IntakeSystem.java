@@ -38,15 +38,29 @@ public class IntakeSystem extends RobotSystem implements Runnable {
 		}
 		// intake if left trigger is pressed
 		if (input.shouldIntake()) {
-			setMotorSpeed(motorSpeed);
+			intakeCube();
 		}
 		// outtake and reverse motors if right trigger is pressed
 		else if (input.shouldOuttake()) {
-			setMotorSpeed(-motorSpeed);
+			depositCube();
 		}
 		else {
 			setMotorSpeed(0);
 		}
+	}
+	
+	/**
+	 * Intake a cube by running the motors in the intake direction
+	 */
+	public void intakeCube() {
+		setMotorSpeed(motorSpeed);
+	}
+	
+	/**
+	 * Deposit a cube by running the motors in the outtake direction
+	 */
+	public void depositCube() {
+		setMotorSpeed(-motorSpeed);
 	}
 
 	/**

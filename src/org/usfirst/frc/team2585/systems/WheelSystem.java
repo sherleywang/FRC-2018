@@ -57,14 +57,19 @@ public class WheelSystem extends RobotSystem {
 		driveWithGyro(forwardInput, rotationInput);
 	}
 	
-	public double findDifference(){
-		return Math.abs(targetAngle - getGyroAngle());
+	/**
+	 * @return the difference between the target angle and the current angle from the gyroscope
+	 */
+	public double getAngleError() {
+		return targetAngle - getGyroAngle();
 	}
 	
-	public double gyroWithAuton(double newTargetAngle){
-		targetAngle = newTargetAngle;
+	/**
+	 * @return the amount of rotational correction that should be applied to rotate towards the target angle
+	 */
+	public double getCorrection() {
 		double rate = getGyroRate() * DERIVATIVE_MULTIPLIER;
-		double correction = (targetAngle - getGyroAngle() - rate) * CORRECTION_MULTIPLIER;
+		double correction = (getAngleError() - rate) * CORRECTION_MULTIPLIER;
 		
 		// Min correction
 		if (Math.abs(correction) < 0.001) correction = 0;
@@ -73,14 +78,13 @@ public class WheelSystem extends RobotSystem {
 			correction = Math.copySign(MAX_CORRECTION, correction);
 		}
 		
-		arcadeDrive(0.0, correction);
-		
 		if (!IS_TEST_SYSTEM) {
 			SmartDashboard.putNumber("Gyro Angle",  getGyroAngle());
 			SmartDashboard.putNumber("Gyro Target Angle",  targetAngle);
 			SmartDashboard.putNumber("Gyro Rate",   getGyroAngle());
 		}
-		return findDifference();
+		
+		return correction;
 	}
 	
 	/**
@@ -92,24 +96,23 @@ public class WheelSystem extends RobotSystem {
 		// Adjust Target Angle
 		targetAngle += rotationInput * ROTATION_RATE;
 		
-		// Rotate towards target angle
-		double rate = getGyroRate() * DERIVATIVE_MULTIPLIER;
-		double correction = (targetAngle - getGyroAngle() - rate) * CORRECTION_MULTIPLIER;
+		arcadeDrive(forwardInput, getCorrection());
+	}
+	
+	/**
+	 * Rotate to a certain targetAngle and get the current error
+	 * @param newTargetAngle the target angle to rotate towards
+	 * @return the current difference between the target angle and current angle
+	 */
+	public double rotateToAngle(double newTargetAngle){
+		targetAngle = newTargetAngle;
 		
-		// Min correction
-		if (Math.abs(correction) < 0.001) correction = 0;
-		// Max correction
-		if (Math.abs(correction) > MAX_CORRECTION) {
-			correction = Math.copySign(MAX_CORRECTION, correction);
-		}
+		double correction = getCorrection();
 		
-		arcadeDrive(forwardInput, correction);
+		arcadeDrive(0.0, correction);
 		
-		if (!IS_TEST_SYSTEM) {
-			SmartDashboard.putNumber("Gyro Angle",  getGyroAngle());
-			SmartDashboard.putNumber("Gyro Target Angle",  targetAngle);
-			SmartDashboard.putNumber("Gyro Rate",   getGyroAngle());
-		}
+		
+		return getAngleError();
 	}
 	
 	/**
