@@ -60,7 +60,7 @@ public class Commands {
 	}
 	
 	/**
-	 * Use the cube lift system to deposit a cube
+	 * Use the intake system to deposit a cube
 	 */
 	private static void depositCube() {
 		intake.depositCube();
@@ -135,7 +135,7 @@ public class Commands {
 						if (Math.abs(turnLeft(90.0)) < 0.5) {
 							return;
 						}
-					} else if (rightSwitch) {
+					} else if (rightSwitch) { // Switch on right side
 						if (Math.abs(turnRight(90.0)) < 0.5) {
 							markTaskComplete();
 						}
@@ -162,7 +162,7 @@ public class Commands {
 						if (Math.abs(turnRight(90.0)) < 0.5) {
 							markTaskComplete();
 						}
-					} else if (rightSwitch) {
+					} else if (rightSwitch) { // Switch on right side
 						if (Math.abs(turnLeft(90.0)) < 0.5) {
 							markTaskComplete();	
 						}
