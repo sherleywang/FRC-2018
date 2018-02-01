@@ -57,6 +57,32 @@ public class WheelSystem extends RobotSystem {
 		driveWithGyro(forwardInput, rotationInput);
 	}
 	
+	public double findDifference(){
+		return Math.abs(targetAngle - getGyroAngle());
+	}
+	
+	public double gyroWithAuton(double newTargetAngle){
+		targetAngle = newTargetAngle;
+		double rate = getGyroRate() * DERIVATIVE_MULTIPLIER;
+		double correction = (targetAngle - getGyroAngle() - rate) * CORRECTION_MULTIPLIER;
+		
+		// Min correction
+		if (Math.abs(correction) < 0.001) correction = 0;
+		// Max correction
+		if (Math.abs(correction) > MAX_CORRECTION) {
+			correction = Math.copySign(MAX_CORRECTION, correction);
+		}
+		
+		arcadeDrive(0.0, correction);
+		
+		if (!IS_TEST_SYSTEM) {
+			SmartDashboard.putNumber("Gyro Angle",  getGyroAngle());
+			SmartDashboard.putNumber("Gyro Target Angle",  targetAngle);
+			SmartDashboard.putNumber("Gyro Rate",   getGyroAngle());
+		}
+		return findDifference();
+	}
+	
 	/**
 	 * Drive using the gyro to keep track of the angle
 	 * @param forwardInput the amount to drive forward

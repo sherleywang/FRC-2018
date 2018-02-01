@@ -39,15 +39,15 @@ public class Commands {
 	/**
 	 * Turn the robot left with no forward movement
 	 */
-	private static void turnLeft() {
-		drivetrain.driveWithGyro(0.0, -0.2);
+	private static double turnLeft(double rotation) {
+		return drivetrain.gyroWithAuton(-rotation);
 	}
 	
 	/**
 	 * Turn the robot right with no forward movement
 	 */
-	private static void turnRight() {
-		drivetrain.driveWithGyro(0.0, 0.2);
+	private static double turnRight(double rotation) {
+		return drivetrain.gyroWithAuton(rotation);
 	}
 	
 	/**
@@ -64,11 +64,12 @@ public class Commands {
 	public class Main implements AutonomousCommand {
 		
 		private static final int timeToDriveStraight = 2000;
+		private static final int timeToSwitch = 1000;
 		private int tasksComplete = 0;
 		private boolean shouldResetTime = false;
 		
 		private void markTaskComplete() {
-			tasksComplete ++;
+			tasksComplete++;
 			shouldResetTime = true;
 		}
 		
@@ -118,12 +119,56 @@ public class Commands {
 		}
 
 		private void runFromSide(long timeElapsed){
-			if(gameData.length() < 1){
-				runStraight(timeElapsed);
-			} if(gameData.charAt(0) == 'L'){
-
-			} else if(gameData.charAt(0) == 'R'){
-				
+			if(gameData.charAt(0) == 'L' && location == 1){
+				switch(tasksComplete) {
+				case 0: //move forward
+					if(timeElapsed < timeToDriveStraight){
+						driveForward();
+					} else {
+						markTaskComplete();
+					}
+					break;
+				case 1: //turn
+					if(turnRight(90.0) < 0.5){
+						markTaskComplete();
+					}
+					break;
+				case 2: //move forward to switch
+					if(timeElapsed < timeToSwitch){
+						driveForward();
+					} else {
+						markTaskComplete();
+					}
+					break;
+				default:
+					stop();
+					break;
+				}
+			} else if(gameData.charAt(0) == 'R' && location == 3){
+				switch(tasksComplete) {
+				case 0: //move forward
+					if(timeElapsed < timeToDriveStraight){
+						driveForward();
+					} else {
+						markTaskComplete();
+					}
+					break;
+				case 1: //turn
+					if(turnLeft(90.0) < 0.5){
+						markTaskComplete();
+					}
+					break;
+				case 2: //move forward to switch
+					if(timeElapsed < timeToSwitch){
+						driveForward();
+					} else {
+						markTaskComplete();
+					}
+					break;
+				default:
+					stop();
+					break;
+				}
 			} else {
 				runStraight(timeElapsed);
 			}
