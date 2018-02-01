@@ -39,17 +39,24 @@ public class Commands {
 	}
 	
 	/**
-	 * Turn the robot left with no forward movement
+	 * Turn the robot to the given angle
+	 * @param rotation the angle to rotate to
+	 * @return the absolute value of the angle error remaining after rotating
 	 */
-	private static double turnLeft(double rotation) {
-		return drivetrain.rotateToAngle(-rotation);
+	private static double turnToAngle(double angle) {
+		return Math.abs(drivetrain.rotateToAngle(angle));
 	}
 	
-	/**
-	 * Turn the robot right with no forward movement
-	 */
-	private static double turnRight(double rotation) {
-		return drivetrain.rotateToAngle(rotation);
+	private static double turnLeft() {
+		return turnToAngle(90.0);
+	}
+	
+	private static double turnRight() {
+		return turnToAngle(-90.0);
+	}
+	
+	private static double turnStraight() {
+		return turnToAngle(0.0);
 	}
 	
 	/**
@@ -123,6 +130,7 @@ public class Commands {
 						markTaskComplete();
 					} 	
 					break;
+					
 				case 1: // MOVE FORWARD 
 					if (timeElapsed < timeToSwitch/2) {
 						driveForward();
@@ -130,58 +138,57 @@ public class Commands {
 						markTaskComplete();
 					}
 					break;
+					
 				case 2: // ROTATE 
 					if (leftSwitch) { // Switch on left side
-						if (Math.abs(turnLeft(90.0)) < 0.5) {
-							return;
-						}
-					} else if (rightSwitch) { // Switch on right side
-						if (Math.abs(turnRight(90.0)) < 0.5) {
-							markTaskComplete();
-						}
-					}
-					markTaskComplete();
-					break;
-				case 3: // MOVE TOWARDS LEFT SWITCH
-					if (timeElapsed < moveLeftTime) {
-						driveForward();
-					} else {
-						markTaskComplete();
-						markTaskComplete();
-					}
-					break;
-				case 4: // MOVE TOWARDS RIGHT SWITCH
-					if (timeElapsed < moveRightTime) {
-						driveForward();
-					} else {
-						markTaskComplete();
-					}
-					break;
-				case 5: // ROTATE AGAIN
-					if (leftSwitch) { // Switch on left side
-						if (Math.abs(turnRight(90.0)) < 0.5) {
+						if (turnLeft() < 0.5) { // Turn left
 							markTaskComplete();
 						}
 					} else if (rightSwitch) { // Switch on right side
-						if (Math.abs(turnLeft(90.0)) < 0.5) {
-							markTaskComplete();	
+						if (turnRight() < 0.5) { // Turn right
+							markTaskComplete();
 						}
 					}
 					break;
-				case 6: // MOVE UP TO SWITCH
+					
+				case 3: // MOVE TOWARDS SIDE OF SWITCH
+					if (leftSwitch) {
+						if (timeElapsed < moveLeftTime) {
+							driveForward();
+						} else {
+							markTaskComplete();
+						}
+					} else if (rightSwitch) {
+						if (timeElapsed < moveRightTime) {
+							driveForward();
+						} else {
+							markTaskComplete();
+						}
+					}
+					break;
+					
+				case 4: // ROTATE BACK TO STRAIGHT
+					if (turnToAngle(0.0) < 0.5) { // turn back to straight
+						markTaskComplete();
+					}
+					break;
+					
+				case 5: // MOVE UP TO SWITCH
 					if (timeElapsed < timeToSwitch/2) {
 						driveForward();
 					} else {
 						markTaskComplete();
 					}
 					break;
-				case 7: // DROP CUBE 
+					
+				case 6: // DROP CUBE 
 					if (timeElapsed < depositCube) {
 						depositCube();
 					} else {
 						markTaskComplete();
 					}
 					break;
+					
 				default:
 					stop();
 					break;
@@ -203,17 +210,19 @@ public class Commands {
 						markTaskComplete();
 					}
 					break;
+					
 				case 1: // TURN INWARDS
 					if (onLeftWithSwitch) {
-						if(Math.abs(turnRight(90.0)) < 0.5){
+						if(turnRight() < 0.5){ 
 							markTaskComplete();
 						}
 					} else if (onRightWithSwitch) {
-						if(Math.abs(turnLeft(90.0)) < 0.5){
+						if(turnLeft() < 0.5){ 
 							markTaskComplete();
 						}
 					}
 					break;
+					
 				case 2: // MOVE INWARDS TOWARDS SWITCH
 					if(timeElapsed < timeInToSwitchFromSide){
 						driveForward();
@@ -221,12 +230,14 @@ public class Commands {
 						markTaskComplete();
 					}
 					break;
+					
 				case 3: // DEPOSIT CUBE
 					if(timeElapsed < timeToDepositCube) {
 						depositCube();
 					} else {
 						markTaskComplete();
 					}
+					
 				default:
 					stop();
 					break;
