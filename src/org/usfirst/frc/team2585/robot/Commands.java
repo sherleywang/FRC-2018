@@ -60,7 +60,7 @@ public class Commands {
 	}
 	
 	/**
-	 * Use the intake system to deposit a cube
+	 * Use the cube lift system to deposit a cube
 	 */
 	private static void depositCube() {
 		intake.depositCube();
@@ -110,7 +110,9 @@ public class Commands {
 			int timeToSwitch = 2000;
 			int moveLeftTime = 1000;
 			int moveRightTime = 1100;
-			int secondForwardTime = 1000;
+			int depositCube = 2000;
+			boolean leftSwitch = gameData.charAt(0) == 'L';
+			boolean rightSwitch = gameData.charAt(0) == 'R';
 			
 			if(gameData.length() < 1){
 				runStraight(timeElapsed);
@@ -121,7 +123,6 @@ public class Commands {
 						markTaskComplete();
 					} 	
 					break;
-					
 				case 1: // MOVE FORWARD 
 					if (timeElapsed < timeToSwitch/2) {
 						driveForward();
@@ -129,10 +130,56 @@ public class Commands {
 						markTaskComplete();
 					}
 					break;
-					
 				case 2: // ROTATE 
-					if (gameData.charAt(0) == 'L') { // Switch on left side
-						
+					if (leftSwitch) { // Switch on left side
+						if (Math.abs(turnLeft(90.0)) < 0.5) {
+							return;
+						}
+					} else if (rightSwitch) {
+						if (Math.abs(turnRight(90.0)) < 0.5) {
+							markTaskComplete();
+						}
+					}
+					markTaskComplete();
+					break;
+				case 3: // MOVE TOWARDS LEFT SWITCH
+					if (timeElapsed < moveLeftTime) {
+						driveForward();
+					} else {
+						markTaskComplete();
+						markTaskComplete();
+					}
+					break;
+				case 4: // MOVE TOWARDS RIGHT SWITCH
+					if (timeElapsed < moveRightTime) {
+						driveForward();
+					} else {
+						markTaskComplete();
+					}
+					break;
+				case 5: // ROTATE AGAIN
+					if (leftSwitch) { // Switch on left side
+						if (Math.abs(turnRight(90.0)) < 0.5) {
+							markTaskComplete();
+						}
+					} else if (rightSwitch) {
+						if (Math.abs(turnLeft(90.0)) < 0.5) {
+							markTaskComplete();	
+						}
+					}
+					break;
+				case 6: // MOVE UP TO SWITCH
+					if (timeElapsed < timeToSwitch/2) {
+						driveForward();
+					} else {
+						markTaskComplete();
+					}
+					break;
+				case 7: // DROP CUBE 
+					if (timeElapsed < depositCube) {
+						depositCube();
+					} else {
+						markTaskComplete();
 					}
 					break;
 				default:
