@@ -168,7 +168,7 @@ public class Commands {
 					break;
 					
 				case 4: // ROTATE BACK TO STRAIGHT
-					if (turnToAngle(0.0) < 0.5) { // turn back to straight
+					if (turnStraight() < 0.5) { // turn back to straight
 						markTaskComplete();
 					}
 					break;
