@@ -22,6 +22,7 @@ public class Commands {
 		environ = env;
 
 		drivetrain = (WheelSystem) environ.getSystem(Environment.WHEEL_SYSTEM);
+		intake = (IntakeSystem) environ.getSystem(Environment.INTAKE_SYSTEM);
 	}
 	
 	/**
@@ -78,8 +79,20 @@ public class Commands {
 		private int tasksComplete = 0;
 		private boolean shouldResetTime = false;
 		
-		boolean onLeftWithSwitch = gameData.charAt(0) == 'L' && location == 1;
-		boolean onRightWithSwitch = gameData.charAt(0) == 'R' && location == 3;
+		boolean onLeftWithSwitch; 
+		boolean onRightWithSwitch;
+		
+		/* (non-Javadoc)
+		 * @see org.usfirst.frc.team2585.robot.AutonomousCommand#updateGameData()
+		 */
+		@Override
+		public void updateGameData() {
+			super.updateGameData();
+			
+			tasksComplete = 0;
+			onLeftWithSwitch = gameData.charAt(0) == 'L' && location == 1;
+			onRightWithSwitch = gameData.charAt(0) == 'R' && location == 3;
+		}
 		
 		/**
 		 * Mark that a task has been complete
@@ -87,6 +100,8 @@ public class Commands {
 		private void markTaskComplete() {
 			tasksComplete++;
 			shouldResetTime = true;
+			stop();
+			SmartDashboard.putNumber("AUTO TASK NUMBER", tasksComplete);
 		}
 		
 		/**
@@ -113,9 +128,6 @@ public class Commands {
 			int depositCube = 2000;
 			boolean leftSwitch = gameData.charAt(0) == 'L';
 			boolean rightSwitch = gameData.charAt(0) == 'R';
-			
-			SmartDashboard.putNumber("GAME DATA: LOCATION", location);
-			SmartDashboard.putString("GAME DATA: STRING", gameData);
 			
 			if(gameData.length() < 1){
 				runStraight(timeElapsed);
@@ -200,6 +212,7 @@ public class Commands {
 			if (onLeftWithSwitch || onRightWithSwitch) {
 				switch(tasksComplete) {
 				case 0: // MOVE FORWARD
+					SmartDashboard.putString("AUTO STATUS", "MOVE FORWARD");
 					if(timeElapsed < timeToDriveStraight){
 						driveForward();
 					} else {
@@ -208,6 +221,7 @@ public class Commands {
 					break;
 					
 				case 1: // TURN INWARDS
+					SmartDashboard.putString("AUTO STATUS", "TURN IN");
 					if (onLeftWithSwitch) {
 						if(turnRight() < 0.5){ 
 							markTaskComplete();
@@ -220,6 +234,7 @@ public class Commands {
 					break;
 					
 				case 2: // MOVE INWARDS TOWARDS SWITCH
+					SmartDashboard.putString("AUTO STATUS", "MOVE FORWARD AGAIN");
 					if(timeElapsed < timeInToSwitchFromSide){
 						driveForward();
 					} else {
@@ -228,13 +243,15 @@ public class Commands {
 					break;
 					
 				case 3: // DEPOSIT CUBE
+					SmartDashboard.putString("AUTO STATUS", "DEPOSIT");
 					if(timeElapsed < timeToDepositCube) {
 						depositCube();
 					} else {
 						markTaskComplete();
 					}
-					
+					break;
 				default:
+					SmartDashboard.putString("AUTO STATUS", "STOP BY DEFAULT");
 					stop();
 					break;
 				}
@@ -248,6 +265,7 @@ public class Commands {
 		 */
 		@Override
 		public boolean execute(long timeElapsed) {
+			SmartDashboard.putString("AUTO EXECUTOR", "MAIN");
 			shouldResetTime = false;
 			if (location == 1 || location == 3) {
 				runFromSide(timeElapsed);
@@ -270,6 +288,7 @@ public class Commands {
 		 */
 		@Override
 		public boolean execute(long timeElapsed) {
+			SmartDashboard.putString("AUTO EXECUTOR", "STRAIGHT");
 			if (timeElapsed < timeToDriveStraight) {
 				driveForward();
 			} else {
@@ -288,6 +307,7 @@ public class Commands {
 		 */
 		@Override
 		public boolean execute(long timeElapsed) {
+			SmartDashboard.putString("AUTO EXECUTOR", "NONE");
 			stop();
 			return false;
 		}

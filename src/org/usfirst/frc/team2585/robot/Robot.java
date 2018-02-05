@@ -33,8 +33,8 @@ public class Robot extends ExecutorBasedRobot {
 		environ = new Environment(this);
 		
 		commands = new Commands(environ);
-		chooser.addDefault("straight", commands.new Straight());
-		chooser.addObject("main", commands.new Main());
+		chooser.addDefault("main", commands.new Main());
+		chooser.addObject("straight", commands.new Straight());
 		chooser.addObject("none", commands.new None());
 		SmartDashboard.putData("Auton choices", chooser);
 		

@@ -53,5 +53,12 @@ public abstract class InputMethod {
 		return 0;
 	}
 	
+	/**
+	 * @return whether the robot gyro should recalibrate
+	 */
+	public boolean shouldCalibrate() {
+		return false;
+	}
+	
 
 }

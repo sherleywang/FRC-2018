@@ -75,4 +75,12 @@ public class XBoxInput extends InputMethod {
 		// +1 is left, -1 is right
 		return -controller.getRawAxis(XboxConstants.RIGHT_X_AXIS);
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.usfirst.frc.team2585.input.InputMethod#shouldCalibrate()
+	 */
+	@Override
+	public boolean shouldCalibrate() {
+		return controller.getRawButton(XboxConstants.START_BUTTON);
+	}
 }

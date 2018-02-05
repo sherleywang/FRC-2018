@@ -55,6 +55,11 @@ public class WheelSystem extends RobotSystem {
 		rotationInput = (Math.abs(rotationInput) > DEADZONE)? rotationInput : 0;
 		
 		driveWithGyro(forwardInput, rotationInput);
+		
+		if (input.shouldCalibrate()) {
+			gyro.calibrate();
+			resetGyro();
+		}
 	}
 	
 	/**
@@ -169,6 +174,7 @@ public class WheelSystem extends RobotSystem {
 	public void resetGyro() {
 		gyro.reset();
 		targetAngle = gyro.getAngle();
+		
 	}
 	
 	/* (non-Javadoc)
