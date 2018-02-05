@@ -138,12 +138,14 @@ public class WheelSystem extends RobotSystem {
 	}
 	
 	/**
+	 * Drive the robot with rotation. Positive rotation is counter-clockwise
 	 * @param forward the amount to drive forward
-	 * @param rotation the amount to rotate
+	 * @param rotation the amount to rotate. Positive rotates counter-clockwise
 	 */
 	protected void arcadeDrive(double forward, double rotation) {
-		double leftSpeed = forward + rotation;
-		double rightSpeed = forward - rotation;
+		double rightSpeed = forward + rotation;
+		double leftSpeed = forward - rotation;
+
 		setSideSpeeds(leftSpeed, rightSpeed);
 	}
 	
@@ -151,14 +153,14 @@ public class WheelSystem extends RobotSystem {
 	 * @return the current angle that the robot is facing from the gyroscope
 	 */
 	protected double getGyroAngle() {
-		return gyro.getAngle();
+		return -gyro.getAngle(); // Negated because gyro is facing backwards
 	}
 	
 	/**
 	 * @return the rate that the robot is rotating from the gyroscope
 	 */
 	protected double getGyroRate() {
-		return gyro.getRate();
+		return -gyro.getRate(); // Negated because gyro is facing backwards
 	}
 	
 	/**

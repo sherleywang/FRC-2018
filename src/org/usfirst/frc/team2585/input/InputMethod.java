@@ -47,7 +47,7 @@ public abstract class InputMethod {
 	}
 
 	/**
-	 * @return the amount that the robot should rotate
+	 * @return the amount that the robot should rotate. +1 is counter-clockwise. -1 is clockwise
 	 */
 	public double rotationAmount() {
 		return 0;

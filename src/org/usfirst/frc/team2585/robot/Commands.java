@@ -3,7 +3,7 @@ package org.usfirst.frc.team2585.robot;
 import org.usfirst.frc.team2585.systems.IntakeSystem;
 import org.usfirst.frc.team2585.systems.WheelSystem;
 
-import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * A container class for the different commands that can be passed to the autonomous executor
@@ -14,9 +14,6 @@ public class Commands {
 	private static WheelSystem drivetrain;
 	private static IntakeSystem intake;
 	
-	private String gameData;
-	private int location;
-	
 	/**
 	 * Constructor that sets the environment and the required systems
 	 * @param e the environment of the robot
@@ -25,10 +22,6 @@ public class Commands {
 		environ = env;
 
 		drivetrain = (WheelSystem) environ.getSystem(Environment.WHEEL_SYSTEM);
-		
-		// Location of the driverStation: 1, 2, 3; L, M, R
-		location = DriverStation.getInstance().getLocation(); 
-		gameData = DriverStation.getInstance().getGameSpecificMessage();
 	}
 	
 	/**
@@ -77,7 +70,7 @@ public class Commands {
 	/**
 	 * Autonomous command that drives according to its position and the side of its switch
 	 */
-	public class Main implements AutonomousCommand {
+	public class Main extends AutonomousCommand {
 		private int timeToDriveStraight = 2000;
 		private int timeToDepositCube = 2000;
 		private int timeInToSwitchFromSide = 200;
@@ -120,6 +113,9 @@ public class Commands {
 			int depositCube = 2000;
 			boolean leftSwitch = gameData.charAt(0) == 'L';
 			boolean rightSwitch = gameData.charAt(0) == 'R';
+			
+			SmartDashboard.putNumber("GAME DATA: LOCATION", location);
+			SmartDashboard.putString("GAME DATA: STRING", gameData);
 			
 			if(gameData.length() < 1){
 				runStraight(timeElapsed);
@@ -267,7 +263,7 @@ public class Commands {
 	/**
 	 * Autonomous command that drives straight no matter what
 	 */
-	public class Straight implements AutonomousCommand {
+	public class Straight extends AutonomousCommand {
 		private static final int timeToDriveStraight = 2000;
 		/* (non-Javadoc)
 		 * @see org.usfirst.frc.team2585.AutonomousCommand#execute(long)
@@ -286,7 +282,7 @@ public class Commands {
 	/**
 	 * Autonomous command that does nothing
 	 */
-	public class None implements AutonomousCommand {
+	public class None extends AutonomousCommand {
 		/* (non-Javadoc)
 		 * @see org.usfirst.frc.team2585.robot.AutonomousCommand#execute(long)
 		 */

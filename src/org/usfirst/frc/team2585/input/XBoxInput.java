@@ -72,6 +72,7 @@ public class XBoxInput extends InputMethod {
 	 */
 	@Override
 	public double rotationAmount() {
-		return controller.getRawAxis(XboxConstants.RIGHT_X_AXIS);
+		// +1 is left, -1 is right
+		return -controller.getRawAxis(XboxConstants.RIGHT_X_AXIS);
 	}
 }

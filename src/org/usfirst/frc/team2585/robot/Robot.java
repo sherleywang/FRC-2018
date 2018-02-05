@@ -51,6 +51,7 @@ public class Robot extends ExecutorBasedRobot {
 		AutonomousCommand autoSelected = chooser.getSelected();
 		AutonomousExecutor executor = new AutonomousExecutor();
 		executor.init(environ);
+		autoSelected.updateGameData();
 		executor.setTask(autoSelected);
 		SmartDashboard.putNumber("Auton Time", 0);
 		
