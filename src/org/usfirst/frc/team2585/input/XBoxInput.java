@@ -36,13 +36,21 @@ public class XBoxInput extends InputMethod {
 	}
 	
 	/* (non-Javadoc)
-	 * @see org.usfirst.frc.team2585.input.InputMethod#shouldLiftCube()
+	 * @see org.usfirst.frc.team2585.input.InputMethod#shouldThrowCube()
 	 */
 	@Override
-	public boolean shouldLiftCube(){
+	public boolean shouldThrowCube(){
 		return controller.getRawButton(XboxConstants.A_BUTTON);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.usfirst.frc.team2585.input.InputMethod#shouldCollectCube()
+	 */
+	@Override
+	public boolean shouldCollectCube(){
+		return controller.getRawButton(XboxConstants.B_BUTTON);
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.usfirst.frc.team2585.input.InputMethod#shouldClimb()
 	 */
@@ -77,8 +85,17 @@ public class XBoxInput extends InputMethod {
 	}
 	
 	/* (non-Javadoc)
-	 * @see org.usfirst.frc.team2585.input.InputMethod#shouldCalibrate()
+	 * @see org.usfirst.frc.team2585.input.InputMethod#shouldBoost()
 	 */
+	@Override
+	public boolean shouldBoost(){
+		return controller.getRawButton(XboxConstants.LEFT_BUMPER);
+	}
+	
+	/* (non-Javadoc)
+	* @see org.usfirst.frc.team2585.input.InputMethod#shouldCalibrate()
+	* @see org.usfirst.frc.team2585.input.InputMethod#shouldBoost()
+	*/
 	@Override
 	public boolean shouldCalibrate() {
 		return controller.getRawButton(XboxConstants.START_BUTTON);
