@@ -36,8 +36,12 @@ public class CubeLiftSystem extends RobotSystem {
 	 */
 	@Override
 	public void run() {
-		if (input.shouldLiftCube()) {
+		if (input.shouldThrowCube() && input.shouldCollectCube()) {
+			setMotorSpeed(0);
+		} else if(input.shouldThrowCube()){
 			setMotorSpeed(motorSpeed);
+		} else if(input.shouldCollectCube()){
+			setMotorSpeed(-motorSpeed);
 		} else {
 			setMotorSpeed(0);
 		}

@@ -16,6 +16,7 @@ public class WheelSystemTest {
 	
 	private double forwardInput;
 	private double rotationInput;
+	private boolean boostInput;
 	
 	private double forwardOutput;
 	private double rotationOutput;
@@ -50,6 +51,7 @@ public class WheelSystemTest {
 	public void resetInput() {
 		forwardInput = 0;
 		rotationInput = 0;
+		boostInput = false;
 		forwardOutput = 0;
 		rotationOutput = 0;
 	}
@@ -71,7 +73,7 @@ public class WheelSystemTest {
 	public void testPositiveRamp() {
 		forwardInput = 1;
 		wheelSystem.run();
-		Assert.assertTrue(forwardOutput == 0.65);
+		Assert.assertTrue(forwardOutput == 0.6);
 	}
 	
 	/**
@@ -81,7 +83,7 @@ public class WheelSystemTest {
 	public void testNegativeRamp() {
 		forwardInput = -1;
 		wheelSystem.run();
-		Assert.assertTrue(forwardOutput == -0.65);
+		Assert.assertTrue(forwardOutput == -0.6);
 	}
 	
 	/**
@@ -282,6 +284,14 @@ public class WheelSystemTest {
 		@Override
 		public double rotationAmount() {
 			return rotationInput;
+		}
+		
+		/* (non-Javadoc)
+		 * @see org.usfirst.frc.team2585.input.InputMethod#shouldBoost()
+		 */
+		@Override
+		public boolean shouldBoost() {
+			return boostInput;
 		}
 	}
 	

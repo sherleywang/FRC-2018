@@ -19,9 +19,16 @@ public abstract class InputMethod {
 	}
 	
 	/**
-	 * @return a boolean denoting whether or not the robot should lift cube
+	 * @return a boolean denoting whether or not the robot should "throw" the cube
 	 */
-	public boolean shouldLiftCube() {
+	public boolean shouldThrowCube() {
+		return false;
+	}
+	
+	/**
+	 * @return a boolean denoting whether or not the robot should turn the cubeCollector
+	 */
+	public boolean shouldCollectCube() {
 		return false;
 	}
 	
@@ -54,11 +61,17 @@ public abstract class InputMethod {
 	}
 	
 	/**
-	 * @return whether the robot gyro should recalibrate
+	 * @return whether the drive train should move faster(boost)
 	 */
-	public boolean shouldCalibrate() {
+	public boolean shouldBoost() {
 		return false;
 	}
 	
+	/**
+	 * @return whether the robot gyro should recalibrate
+	 */
+	public boolean shouldCalibrate() {
+	 		return false;
+	 	}
 
 }

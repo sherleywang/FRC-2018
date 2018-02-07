@@ -13,7 +13,8 @@ public class CubeLiftSystemTest {
 	private TestInput input;
 	private TestCubeLiftSystem cubeLiftSystem;
 	
-	boolean shouldLiftCube;
+	boolean shouldThrowCube;
+	boolean shouldCollectCube;
 	
 	double motorSpeedOutput;
 	
@@ -32,8 +33,9 @@ public class CubeLiftSystemTest {
 	 * when the cube lift button is pressed
 	 */
 	@Test
-	public void motorRunsWhenLifting() {
-		shouldLiftCube = true;
+	public void motorRunsWhenThrowing() {
+		shouldThrowCube = true;
+		shouldCollectCube = false;
 		cubeLiftSystem.run();
 		Assert.assertTrue(motorSpeedOutput > 0);
 	}
@@ -44,19 +46,21 @@ public class CubeLiftSystemTest {
 	 */
 	@Test
 	public void defaultsToZero() {
-		shouldLiftCube = false;
+		shouldThrowCube = false;
+		shouldCollectCube = false;
 		cubeLiftSystem.run();
 		Assert.assertTrue(motorSpeedOutput == 0);
 	}
 	
 	/**
-	 * Tests that the output returns to zero after releasing the lift button
+	 * Tests that the output returns to zero after releasing the throw button
 	 */
 	@Test
 	public void returnsToZeroAfterRunning() {
-		shouldLiftCube = true;
+		shouldThrowCube = true;
+		shouldCollectCube = false;
 		cubeLiftSystem.run();
-		shouldLiftCube = false;
+		shouldThrowCube = false;
 		cubeLiftSystem.run();
 		
 		Assert.assertTrue(motorSpeedOutput == 0);
@@ -67,13 +71,20 @@ public class CubeLiftSystemTest {
 	 */
 	private class TestInput extends InputMethod {
 		/* (non-Javadoc)
-		 * @see org.usfirst.frc.team2585.input.InputMethod#shouldLiftCube()
+		 * @see org.usfirst.frc.team2585.input.InputMethod#shouldThrowCube()
 		 */
 		@Override
-		public boolean shouldLiftCube() {
-			return shouldLiftCube;
+		public boolean shouldThrowCube() {
+			return shouldThrowCube;
 		}
 		
+		/* (non-Javadoc)
+		 * @see org.usfirst.frc.team2585.input.InputMethod#shouldCollectCube()
+		 */
+		@Override
+		public boolean shouldCollectCube() {
+			return shouldCollectCube;
+		}
 	}
 	
 	/**
