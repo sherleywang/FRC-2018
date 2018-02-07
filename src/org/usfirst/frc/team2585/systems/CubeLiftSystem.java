@@ -3,12 +3,15 @@ package org.usfirst.frc.team2585.systems;
 import org.impact2585.lib2585.RampedSpeedController;
 import org.usfirst.frc.team2585.robot.Environment;
 import org.usfirst.frc.team2585.robot.RobotMap;
+import edu.wpi.first.wpilibj.DigitalInput;
 
 /**
  * This system lifts cubes
  */
 public class CubeLiftSystem extends RobotSystem {
 	
+	DigitalInput limitSwitchTop;
+	DigitalInput limitSwitchBottom;
 	RampedSpeedController liftMotor;
 	
 	static double motorSpeed = 0.8;
@@ -20,8 +23,11 @@ public class CubeLiftSystem extends RobotSystem {
 	public void init(Environment environ) {
 		super.init(environ);
 
+		limitSwitchTop = new DigitalInput(RobotMap.LIMIT_SWITCH_TOP);
+		limitSwitchBottom = new DigitalInput(RobotMap.LIMIT_SWITCH_BOTTOM);
 		liftMotor = new RampedSpeedController (RobotMap.CUBE_LIFT_MOTOR);
 	}
+	
 
 	/* (non-Javadoc)
 	 * @see org.impact2585.lib2585.Destroyable#destroy()
@@ -39,9 +45,17 @@ public class CubeLiftSystem extends RobotSystem {
 		if (input.shouldThrowCube() && input.shouldCollectCube()) {
 			setMotorSpeed(0);
 		} else if(input.shouldThrowCube()){
-			setMotorSpeed(motorSpeed);
+			if(isSwitchPressedTop()){
+				setMotorSpeed(0);
+			} else {
+				setMotorSpeed(motorSpeed);
+			}
 		} else if(input.shouldCollectCube()){
-			setMotorSpeed(-motorSpeed);
+			if(isSwitchPressedBottom()){
+				setMotorSpeed(0);
+			} else {
+				setMotorSpeed(-motorSpeed);
+			}
 		} else {
 			setMotorSpeed(0);
 		}
@@ -61,4 +75,17 @@ public class CubeLiftSystem extends RobotSystem {
 	public void stop() {
 		liftMotor.updateWithSpeed(0);
 	}
+	
+	 /**
+     * @return whether the top limit switch is pressed
+     */
+    public boolean isSwitchPressedTop() {
+    	return limitSwitchTop.get();
+    }
+    /**
+     * @return whether the bottom limit switch is pressed
+     */
+    public boolean isSwitchPressedBottom() {
+        return limitSwitchBottom.get();
+    }
 }
