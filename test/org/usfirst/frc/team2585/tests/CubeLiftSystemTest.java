@@ -16,6 +16,9 @@ public class CubeLiftSystemTest {
 	boolean shouldThrowCube;
 	boolean shouldCollectCube;
 	
+	boolean isTopSwitchPressed;
+	boolean isBottomSwitchPressed;
+	
 	double motorSpeedOutput;
 	
 	/**
@@ -26,6 +29,9 @@ public class CubeLiftSystemTest {
 		input = new TestInput();
 		cubeLiftSystem = new TestCubeLiftSystem();
 		cubeLiftSystem.setInput(input);
+		
+		isTopSwitchPressed = false;
+		isBottomSwitchPressed = false;
 	}
 	
 	/**
@@ -74,7 +80,7 @@ public class CubeLiftSystemTest {
 		 * @see org.usfirst.frc.team2585.input.InputMethod#shouldThrowCube()
 		 */
 		@Override
-		public boolean shouldThrowCube() {
+		public boolean shouldRotateUp() {
 			return shouldThrowCube;
 		}
 		
@@ -82,7 +88,7 @@ public class CubeLiftSystemTest {
 		 * @see org.usfirst.frc.team2585.input.InputMethod#shouldCollectCube()
 		 */
 		@Override
-		public boolean shouldCollectCube() {
+		public boolean shouldRotateDown() {
 			return shouldCollectCube;
 		}
 	}
@@ -92,9 +98,28 @@ public class CubeLiftSystemTest {
 	 */
 	private class TestCubeLiftSystem extends CubeLiftSystem {
 
+		/* (non-Javadoc)
+		 * @see org.usfirst.frc.team2585.systems.CubeLiftSystem#setMotorSpeed(double)
+		 */
 		@Override
 		public void setMotorSpeed(double motorSpeed) {
 			motorSpeedOutput = motorSpeed;
+		}
+		
+		/* (non-Javadoc)
+		 * @see org.usfirst.frc.team2585.systems.CubeLiftSystem#isSwitchPressedTop()
+		 */
+		@Override
+		public boolean isTopSwitchPressed() {
+			return isTopSwitchPressed;
+		}
+		
+		/* (non-Javadoc)
+		 * @see org.usfirst.frc.team2585.systems.CubeLiftSystem#isSwitchPressedBottom()
+		 */
+		@Override
+		public boolean isBottomSwitchPressed() {
+			return isBottomSwitchPressed;
 		}
 	}
 }

@@ -21,14 +21,14 @@ public abstract class InputMethod {
 	/**
 	 * @return a boolean denoting whether or not the robot should "throw" the cube
 	 */
-	public boolean shouldThrowCube() {
+	public boolean shouldRotateUp() {
 		return false;
 	}
 	
 	/**
 	 * @return a boolean denoting whether or not the robot should turn the cubeCollector
 	 */
-	public boolean shouldCollectCube() {
+	public boolean shouldRotateDown() {
 		return false;
 	}
 	

@@ -39,7 +39,7 @@ public class XBoxInput extends InputMethod {
 	 * @see org.usfirst.frc.team2585.input.InputMethod#shouldThrowCube()
 	 */
 	@Override
-	public boolean shouldThrowCube(){
+	public boolean shouldRotateUp(){
 		return controller.getRawButton(XboxConstants.A_BUTTON);
 	}
 
@@ -47,7 +47,7 @@ public class XBoxInput extends InputMethod {
 	 * @see org.usfirst.frc.team2585.input.InputMethod#shouldCollectCube()
 	 */
 	@Override
-	public boolean shouldCollectCube(){
+	public boolean shouldRotateDown(){
 		return controller.getRawButton(XboxConstants.B_BUTTON);
 	}
 	

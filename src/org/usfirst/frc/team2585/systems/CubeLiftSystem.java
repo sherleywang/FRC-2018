@@ -3,7 +3,10 @@ package org.usfirst.frc.team2585.systems;
 import org.impact2585.lib2585.RampedSpeedController;
 import org.usfirst.frc.team2585.robot.Environment;
 import org.usfirst.frc.team2585.robot.RobotMap;
+
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Spark;
+import edu.wpi.first.wpilibj.SpeedController;
 
 /**
  * This system lifts cubes
@@ -14,7 +17,7 @@ public class CubeLiftSystem extends RobotSystem {
 	DigitalInput limitSwitchBottom;
 	RampedSpeedController liftMotor;
 	
-	static double motorSpeed = 0.8;
+	static double motorSpeed = 0.65;
 	
 	/* (non-Javadoc)
 	 * @see org.usfirst.frc.team2585.systems.RobotSystem#init(org.usfirst.frc.team2585.robot.Environment)
@@ -25,7 +28,9 @@ public class CubeLiftSystem extends RobotSystem {
 
 		limitSwitchTop = new DigitalInput(RobotMap.LIMIT_SWITCH_TOP);
 		limitSwitchBottom = new DigitalInput(RobotMap.LIMIT_SWITCH_BOTTOM);
-		liftMotor = new RampedSpeedController (RobotMap.CUBE_LIFT_MOTOR);
+		
+		SpeedController controller = new Spark(RobotMap.CUBE_LIFT_MOTOR);
+		liftMotor = new RampedSpeedController(controller);
 	}
 	
 
@@ -42,16 +47,16 @@ public class CubeLiftSystem extends RobotSystem {
 	 */
 	@Override
 	public void run() {
-		if (input.shouldThrowCube() && input.shouldCollectCube()) {
+		if (input.shouldRotateUp() && input.shouldRotateDown()) {
 			setMotorSpeed(0);
-		} else if(input.shouldThrowCube()){
-			if(isSwitchPressedTop()){
+		} else if(input.shouldRotateUp()){
+			if(isTopSwitchPressed()){
 				setMotorSpeed(0);
 			} else {
 				setMotorSpeed(motorSpeed);
 			}
-		} else if(input.shouldCollectCube()){
-			if(isSwitchPressedBottom()){
+		} else if(input.shouldRotateDown()){
+			if(isBottomSwitchPressed()){
 				setMotorSpeed(0);
 			} else {
 				setMotorSpeed(-motorSpeed);
@@ -79,13 +84,13 @@ public class CubeLiftSystem extends RobotSystem {
 	 /**
      * @return whether the top limit switch is pressed
      */
-    public boolean isSwitchPressedTop() {
-    	return limitSwitchTop.get();
+    public boolean isTopSwitchPressed() {
+    		return limitSwitchTop.get();
     }
     /**
      * @return whether the bottom limit switch is pressed
      */
-    public boolean isSwitchPressedBottom() {
+    public boolean isBottomSwitchPressed() {
         return limitSwitchBottom.get();
     }
 }
