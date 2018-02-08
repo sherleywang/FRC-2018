@@ -32,18 +32,30 @@ public class CubeLiftSystemTest {
 		
 		isTopSwitchPressed = false;
 		isBottomSwitchPressed = false;
+		shouldThrowCube = false;
+		shouldCollectCube = false;
 	}
 	
 	/**
 	 * Tests that the speed of the motor is more than 0
-	 * when the cube lift button is pressed
+	 * when the cube throw button is pressed
 	 */
 	@Test
 	public void motorRunsWhenThrowing() {
 		shouldThrowCube = true;
-		shouldCollectCube = false;
 		cubeLiftSystem.run();
 		Assert.assertTrue(motorSpeedOutput > 0);
+	}
+	
+	/**
+	 * Tests that the speed of the motor is less than 0
+	 * when the cube collect button is pressed
+	 */
+	@Test
+	public void motorRunsWhenCollecting() {
+		shouldCollectCube = true;
+		cubeLiftSystem.run();
+		Assert.assertTrue(motorSpeedOutput < 0);
 	}
 	
 	/**
@@ -52,8 +64,18 @@ public class CubeLiftSystemTest {
 	 */
 	@Test
 	public void defaultsToZero() {
-		shouldThrowCube = false;
-		shouldCollectCube = false;
+		cubeLiftSystem.run();
+		Assert.assertTrue(motorSpeedOutput == 0);
+	}
+	
+	/**
+	 * Tests that the speed of the motor starts as zero when the 
+	 * user gives no input
+	 */
+	@Test
+	public void stationaryWhenBothPressed() {
+		shouldThrowCube = true;
+		shouldCollectCube = true;
 		cubeLiftSystem.run();
 		Assert.assertTrue(motorSpeedOutput == 0);
 	}
@@ -64,12 +86,83 @@ public class CubeLiftSystemTest {
 	@Test
 	public void returnsToZeroAfterRunning() {
 		shouldThrowCube = true;
-		shouldCollectCube = false;
 		cubeLiftSystem.run();
 		shouldThrowCube = false;
 		cubeLiftSystem.run();
 		
 		Assert.assertTrue(motorSpeedOutput == 0);
+		
+		shouldCollectCube = true;
+		cubeLiftSystem.run();
+		shouldCollectCube = false;
+		cubeLiftSystem.run();
+		
+		Assert.assertTrue(motorSpeedOutput == 0);
+	}
+	
+	/**
+	 * Tests that the speed of the motor is 0
+	 * when the limit switch is being pressed and the user is trying
+	 * to go past the limit
+	 */
+	@Test
+	public void resistsMovementPastSwitches() {
+		shouldThrowCube = true;
+		isTopSwitchPressed = true;
+		cubeLiftSystem.run();
+		Assert.assertTrue(motorSpeedOutput == 0);
+		
+		shouldThrowCube = false;
+		isTopSwitchPressed = false;
+		
+		shouldCollectCube = true;
+		isBottomSwitchPressed = true;
+		cubeLiftSystem.run();
+		Assert.assertTrue(motorSpeedOutput == 0);
+	}
+	
+	/**
+	 * Tests that the motor still runs
+	 * when the upper limit switch is being pressed and the user is trying
+	 * to go in the opposite direction
+	 */
+	@Test
+	public void movableInDirectionOppositeSwitch() {
+		shouldCollectCube = true;
+		isTopSwitchPressed = true;
+		cubeLiftSystem.run();
+		Assert.assertTrue(motorSpeedOutput < 0);
+
+		shouldCollectCube = false;
+		isTopSwitchPressed = false;
+
+		shouldThrowCube = true;
+		isBottomSwitchPressed = true;
+		cubeLiftSystem.run();
+		Assert.assertTrue(motorSpeedOutput > 0);
+	}
+	
+	/**
+	 * Tests that the motor still runs
+	 * in either direction after the switch is released
+	 */
+	@Test
+	public void movableAfterSwitchReleased() {
+		shouldCollectCube = true;
+		isBottomSwitchPressed = true;
+		cubeLiftSystem.run();
+		isBottomSwitchPressed = false;
+		cubeLiftSystem.run();
+		Assert.assertTrue(motorSpeedOutput < 0);
+
+		shouldThrowCube = true;
+		shouldCollectCube = false;
+		
+		isTopSwitchPressed = true;
+		cubeLiftSystem.run();
+		isTopSwitchPressed = false;
+		cubeLiftSystem.run();
+		Assert.assertTrue(motorSpeedOutput > 0);
 	}
 	
 	/**
