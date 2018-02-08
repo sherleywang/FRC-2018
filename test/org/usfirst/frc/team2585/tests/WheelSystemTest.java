@@ -73,7 +73,7 @@ public class WheelSystemTest {
 	public void testPositiveRamp() {
 		forwardInput = 1;
 		wheelSystem.run();
-		Assert.assertTrue(forwardOutput == 0.6);
+		Assert.assertTrue(forwardOutput == 0.65);
 	}
 	
 	/**
@@ -83,7 +83,7 @@ public class WheelSystemTest {
 	public void testNegativeRamp() {
 		forwardInput = -1;
 		wheelSystem.run();
-		Assert.assertTrue(forwardOutput == -0.6);
+		Assert.assertTrue(forwardOutput == -0.65);
 	}
 	
 	/**
@@ -105,7 +105,6 @@ public class WheelSystemTest {
 		forwardInput = 0.3;
 		wheelSystem.run();
 		Assert.assertTrue(forwardOutput > 0);
-		
 		
 		// Close to deadzone should still be able to move backwards
 		forwardInput = -0.3;
@@ -260,10 +259,75 @@ public class WheelSystemTest {
 		gyroAngle = 90;
 		wheelSystem.run();
 		Assert.assertTrue(rotationOutput < 0);
+		
 		// testing the gyro for negative values
 		gyroAngle = -90;
 		wheelSystem.run();
 		Assert.assertTrue(rotationOutput > 0);
+	}
+	
+	/**
+	 * Tests the boost system
+	 */
+	@Test
+	public void testBoost() {
+		// testing boost for forward
+		boostInput = true;
+		forwardInput = 1;
+		wheelSystem.run();
+		Assert.assertTrue(forwardOutput == 0.8);
+		boostInput = false;
+		wheelSystem.run();
+		Assert.assertTrue(forwardOutput == 0.65);
+		
+		// testing boost for backwards
+		boostInput = true;
+		forwardInput = -1;
+		wheelSystem.run();
+		Assert.assertTrue(forwardOutput == -0.8);
+		boostInput = false;
+		wheelSystem.run();
+		Assert.assertTrue(forwardOutput == -0.65);
+		
+		// testing boost for forward and turning right
+		boostInput = true;
+		forwardInput = 1;
+		rotationInput = 1;
+		wheelSystem.run();
+		Assert.assertTrue(forwardOutput == 0.8);
+		boostInput = false;
+		wheelSystem.run();
+		Assert.assertTrue(forwardOutput == 0.65);
+		
+		// testing boost for forward and turning left
+		boostInput = true;
+		forwardInput = 1;
+		rotationInput = -1;
+		wheelSystem.run();
+		Assert.assertTrue(forwardOutput == 0.8);
+		boostInput = false;
+		wheelSystem.run();
+		Assert.assertTrue(forwardOutput == 0.65);
+		
+		// testing boost for backwards and turning right
+		boostInput = true;
+		forwardInput = -1;
+		rotationInput = 1;
+		wheelSystem.run();
+		Assert.assertTrue(forwardOutput == -0.8);
+		boostInput = false;
+		wheelSystem.run();
+		Assert.assertTrue(forwardOutput == -0.65);
+		
+		// testing boost for backwards and turning left
+		boostInput = true;
+		forwardInput = -1;
+		rotationInput = -1;
+		wheelSystem.run();
+		Assert.assertTrue(forwardOutput == -0.8);
+		boostInput = false;
+		wheelSystem.run();
+		Assert.assertTrue(forwardOutput == -0.65);
 	}
 
 	/**
