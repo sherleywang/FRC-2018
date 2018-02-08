@@ -113,6 +113,7 @@ public class CubeLiftSystemTest {
 		Assert.assertTrue(motorSpeedOutput == 0);
 		
 		shouldThrowCube = false;
+		isTopSwitchPressed = false;
 		
 		shouldCollectCube = true;
 		isBottomSwitchPressed = true;
@@ -133,6 +134,7 @@ public class CubeLiftSystemTest {
 		Assert.assertTrue(motorSpeedOutput < 0);
 
 		shouldCollectCube = false;
+		isTopSwitchPressed = false;
 
 		shouldThrowCube = true;
 		isBottomSwitchPressed = true;
