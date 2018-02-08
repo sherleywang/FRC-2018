@@ -14,6 +14,8 @@ public class Commands {
 	private static WheelSystem drivetrain;
 	private static IntakeSystem intake;
 	
+	private static final double METERS_PER_SECOND = 0.865; // ROBOT SPEED in  m/s
+	
 	/**
 	 * Constructor that sets the environment and the required systems
 	 * @param e the environment of the robot
@@ -68,28 +70,32 @@ public class Commands {
 	}
 	
 	/**
-	 * Converts distance to time
+	 * @param distance in meters
+	 * @return time it will take the robot to drive the given distance in milliseconds
 	 */
-	
-	private static long convertToTime(double distance) { // distance will be in centimeters
-		double robotSpeed = 0.0865; // speed of robot in centimeters per millisecond
-		return Math.round(distance/robotSpeed);
+	private static long distanceToTime(double meters) { 
+		final double METERS_PER_MILLISECOND = METERS_PER_SECOND * 0.001; // Conversion: m/s * (1 s/1000 ms)
+		return Math.round(meters / METERS_PER_MILLISECOND);
 	}
 	
 	/**
 	 * Autonomous command that drives according to its position and the side of its switch
 	 */
 	public class Main extends AutonomousCommand {
-		// all convertToTime inputs are distances in centimeters
-		private long distanceToDriveStraight = convertToTime(426.72);
+		private long delayTime = 2000;
 		private long timeToDepositCube = 3500;
-		private long distanceToSwitchFromSide = convertToTime(91.44);
+		
+		private long middleDistanceToSwitch = distanceToTime(3.556);
+		private long middleLeftSegment = distanceToTime(2.1336);
+		private long middleRightSegment = distanceToTime(0.9144);
+		private long sideDistanceToSwitch = distanceToTime(4.2672);
+		private long distanceInToSwitchFromSide = distanceToTime(0.9144);
+		
+		private boolean shouldResetTime = false;
+		private boolean onLeftWithSwitch = false; 
+		private boolean onRightWithSwitch = false;
 		
 		private int tasksComplete = 0;
-		private boolean shouldResetTime = false;
-		
-		boolean onLeftWithSwitch; 
-		boolean onRightWithSwitch;
 		
 		/* (non-Javadoc)
 		 * @see org.usfirst.frc.team2585.robot.AutonomousCommand#updateGameData()
@@ -118,7 +124,7 @@ public class Commands {
 		 * @param timeElapsed the time elapsed since the last task was completed
 		 */
 		private void runStraight(long timeElapsed) {
-			if (timeElapsed < distanceToDriveStraight) {
+			if (timeElapsed < sideDistanceToSwitch) {
 				driveForward();
 			} else {
 				stop();
@@ -133,11 +139,6 @@ public class Commands {
 			/**
 			 * All convertToTime inputs should be distances in centimeters
 			 */
-			long delayTime = 2000;
-			long distanceToSwitch = convertToTime(355.6);
-			long moveLeftSegment = convertToTime(213.36);
-			long moveRightSegment = convertToTime(91.44);
-			long depositCubeTime = 3500;
 			boolean leftSwitch = gameData.charAt(0) == 'L';
 			boolean rightSwitch = gameData.charAt(0) == 'R';
 			
@@ -152,7 +153,7 @@ public class Commands {
 					break;
 					
 				case 1: // MOVE FORWARD 
-					if (timeElapsed < distanceToSwitch/2) {
+					if (timeElapsed < middleDistanceToSwitch/2) {
 						driveForward();
 					} else {
 						markTaskComplete();
@@ -173,13 +174,13 @@ public class Commands {
 					
 				case 3: // MOVE TOWARDS SIDE OF SWITCH
 					if (leftSwitch) {
-						if (timeElapsed < moveLeftSegment) {
+						if (timeElapsed < middleLeftSegment) {
 							driveForward();
 						} else {
 							markTaskComplete();
 						}
 					} else if (rightSwitch) {
-						if (timeElapsed < moveRightSegment) {
+						if (timeElapsed < middleRightSegment) {
 							driveForward();
 						} else {
 							markTaskComplete();
@@ -194,7 +195,7 @@ public class Commands {
 					break;
 					
 				case 5: // MOVE UP TO SWITCH
-					if (timeElapsed < distanceToSwitch/2) {
+					if (timeElapsed < middleDistanceToSwitch/2) {
 						driveForward();
 					} else {
 						markTaskComplete();
@@ -202,7 +203,7 @@ public class Commands {
 					break;
 					
 				case 6: // DROP CUBE 
-					if (timeElapsed < depositCubeTime) {
+					if (timeElapsed < timeToDepositCube) {
 						depositCube();
 					} else {
 						markTaskComplete();
@@ -225,7 +226,7 @@ public class Commands {
 				switch(tasksComplete) {
 				case 0: // MOVE FORWARD
 					SmartDashboard.putString("AUTO STATUS", "MOVE FORWARD");
-					if(timeElapsed < distanceToDriveStraight){
+					if(timeElapsed < sideDistanceToSwitch){
 						driveForward();
 					} else {
 						markTaskComplete();
@@ -247,7 +248,7 @@ public class Commands {
 					
 				case 2: // MOVE INWARDS TOWARDS SWITCH
 					SmartDashboard.putString("AUTO STATUS", "MOVE FORWARD AGAIN");
-					if(timeElapsed < distanceToSwitchFromSide){
+					if(timeElapsed < distanceInToSwitchFromSide){
 						driveForward();
 					} else {
 						markTaskComplete();
@@ -309,6 +310,27 @@ public class Commands {
 			return false;
 		}
 	}
+	
+	/**
+	 * Autonomous command that drives straight for three seconds to find speed of the robot
+	 */
+	public class SpeedTest extends AutonomousCommand {
+		private static final int timeToDriveStraight = 3000;
+		/* (non-Javadoc)
+		 * @see org.usfirst.frc.team2585.AutonomousCommand#execute(long)
+		 */
+		@Override
+		public boolean execute(long timeElapsed) {
+			SmartDashboard.putString("AUTO EXECUTOR", "STRAIGHT");
+			if (timeElapsed < timeToDriveStraight) {
+				driveForward();
+			} else {
+				stop();
+			}
+			return false;
+		}
+	}
+	
 	
 	/**
 	 * Autonomous command that does nothing

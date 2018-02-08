@@ -35,6 +35,7 @@ public class Robot extends ExecutorBasedRobot {
 		commands = new Commands(environ);
 		chooser.addDefault("main", commands.new Main());
 		chooser.addObject("straight", commands.new Straight());
+		chooser.addObject("speed test", commands.new SpeedTest());
 		chooser.addObject("none", commands.new None());
 		SmartDashboard.putData("Auton choices", chooser);
 		
