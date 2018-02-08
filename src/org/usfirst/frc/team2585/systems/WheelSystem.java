@@ -110,6 +110,15 @@ public class WheelSystem extends RobotSystem {
 	}
 	
 	/**
+	 * Drive the robot without using input from the gyro
+	 * @param forwardInput the amount to drive forward. -1 is backwards, 1 is forwards
+	 * @param rotationInput the amount to rotate. -1 is clockwise, 1 is counter-clockwise
+	 */
+	public void driveWithoutGyro(double forwardInput, double rotationInput) {
+		arcadeDrive(forwardInput, rotationInput);
+	}
+	
+	/**
 	 * Rotate to a certain targetAngle and get the current error
 	 * @param newTargetAngle the target angle to rotate towards
 	 * @return the current difference between the target angle and current angle
@@ -120,7 +129,6 @@ public class WheelSystem extends RobotSystem {
 		double correction = getCorrection();
 		
 		arcadeDrive(0.0, correction);
-		
 		
 		return getAngleError();
 	}
