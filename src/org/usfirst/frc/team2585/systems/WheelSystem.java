@@ -21,8 +21,8 @@ public class WheelSystem extends RobotSystem {
 	
 	private final double DEADZONE = 0.2;
 	
-	private final double FORWARD_MULTIPLIER = 0.6;
-	private final double FORWARD_MULTIPLIER_BOOST = 0.7;
+	private final double FORWARD_MULTIPLIER = 0.65;
+	private final double FORWARD_MULTIPLIER_BOOST = 0.8;
 	private final double ROTATION_RATE = 4.0;
 	private final double DERIVATIVE_MULTIPLIER = 0.1;
 	private final double CORRECTION_MULTIPLIER = 0.01;
