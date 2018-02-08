@@ -67,14 +67,23 @@ public class Commands {
 		intake.depositCube();
 	}
 	
+	/**
+	 * Converts distance to time
+	 */
+	
+	private static long convertToTime(double distance) { // distance will be in centimeters
+		double robotSpeed = 0.0865; // speed of robot in centimeters per millisecond
+		return Math.round(distance/robotSpeed);
+	}
 	
 	/**
 	 * Autonomous command that drives according to its position and the side of its switch
 	 */
 	public class Main extends AutonomousCommand {
-		private int timeToDriveStraight = 2000;
-		private int timeToDepositCube = 2000;
-		private int timeInToSwitchFromSide = 200;
+		// all convertToTime inputs are distances in centimeters
+		private long distanceToDriveStraight = convertToTime(426.72);
+		private long timeToDepositCube = 3500;
+		private long distanceToSwitchFromSide = convertToTime(91.44);
 		
 		private int tasksComplete = 0;
 		private boolean shouldResetTime = false;
@@ -109,7 +118,7 @@ public class Commands {
 		 * @param timeElapsed the time elapsed since the last task was completed
 		 */
 		private void runStraight(long timeElapsed) {
-			if (timeElapsed < timeToDriveStraight) {
+			if (timeElapsed < distanceToDriveStraight) {
 				driveForward();
 			} else {
 				stop();
@@ -121,11 +130,14 @@ public class Commands {
 		 * @param timeElapsed the time elapsed since the last task was completed
 		 */
 		private void runFromMiddle(long timeElapsed){
-			int delayTime = 2000;
-			int timeToSwitch = 2000;
-			int moveLeftTime = 1000;
-			int moveRightTime = 1100;
-			int depositCube = 2000;
+			/**
+			 * All convertToTime inputs should be distances in centimeters
+			 */
+			long delayTime = 2000;
+			long distanceToSwitch = convertToTime(355.6);
+			long moveLeftSegment = convertToTime(213.36);
+			long moveRightSegment = convertToTime(91.44);
+			long depositCubeTime = 3500;
 			boolean leftSwitch = gameData.charAt(0) == 'L';
 			boolean rightSwitch = gameData.charAt(0) == 'R';
 			
@@ -140,7 +152,7 @@ public class Commands {
 					break;
 					
 				case 1: // MOVE FORWARD 
-					if (timeElapsed < timeToSwitch/2) {
+					if (timeElapsed < distanceToSwitch/2) {
 						driveForward();
 					} else {
 						markTaskComplete();
@@ -161,13 +173,13 @@ public class Commands {
 					
 				case 3: // MOVE TOWARDS SIDE OF SWITCH
 					if (leftSwitch) {
-						if (timeElapsed < moveLeftTime) {
+						if (timeElapsed < moveLeftSegment) {
 							driveForward();
 						} else {
 							markTaskComplete();
 						}
 					} else if (rightSwitch) {
-						if (timeElapsed < moveRightTime) {
+						if (timeElapsed < moveRightSegment) {
 							driveForward();
 						} else {
 							markTaskComplete();
@@ -182,7 +194,7 @@ public class Commands {
 					break;
 					
 				case 5: // MOVE UP TO SWITCH
-					if (timeElapsed < timeToSwitch/2) {
+					if (timeElapsed < distanceToSwitch/2) {
 						driveForward();
 					} else {
 						markTaskComplete();
@@ -190,7 +202,7 @@ public class Commands {
 					break;
 					
 				case 6: // DROP CUBE 
-					if (timeElapsed < depositCube) {
+					if (timeElapsed < depositCubeTime) {
 						depositCube();
 					} else {
 						markTaskComplete();
@@ -213,7 +225,7 @@ public class Commands {
 				switch(tasksComplete) {
 				case 0: // MOVE FORWARD
 					SmartDashboard.putString("AUTO STATUS", "MOVE FORWARD");
-					if(timeElapsed < timeToDriveStraight){
+					if(timeElapsed < distanceToDriveStraight){
 						driveForward();
 					} else {
 						markTaskComplete();
@@ -235,7 +247,7 @@ public class Commands {
 					
 				case 2: // MOVE INWARDS TOWARDS SWITCH
 					SmartDashboard.putString("AUTO STATUS", "MOVE FORWARD AGAIN");
-					if(timeElapsed < timeInToSwitchFromSide){
+					if(timeElapsed < distanceToSwitchFromSide){
 						driveForward();
 					} else {
 						markTaskComplete();
