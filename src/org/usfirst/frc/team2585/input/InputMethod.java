@@ -1,5 +1,7 @@
 package org.usfirst.frc.team2585.input;
 
+import org.impact2585.lib2585.XboxConstants;
+
 /**
  * Operator controls for the robot
  */
@@ -64,6 +66,13 @@ public abstract class InputMethod {
 	 * @return whether the drive train should move faster(boost)
 	 */
 	public boolean shouldBoost() {
+		return false;
+	}
+	
+	/**
+	 * @return whether the camera view should switch
+	 */
+	public boolean shouldSwitchCamera() {
 		return false;
 	}
 	

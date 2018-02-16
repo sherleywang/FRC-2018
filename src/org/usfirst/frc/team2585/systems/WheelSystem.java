@@ -30,6 +30,7 @@ public class WheelSystem extends RobotSystem {
 	
 	public static boolean IS_TEST_SYSTEM = false;
 	
+	private boolean isForwardInverted = false;
 		
 	/* (non-Javadoc)
 	 * @see org.usfirst.frc.team2585.systems.Initializable#init(org.usfirst.frc.team2585.Environment)
@@ -50,6 +51,8 @@ public class WheelSystem extends RobotSystem {
 	 */
 	public void run() {
 		double forwardInput = -input.forwardAmount(); // reverse direction of driving
+		if (isForwardInverted) forwardInput *= -1;
+		
 		if(input.shouldBoost()){
 			forwardInput = (Math.abs(forwardInput) > DEADZONE)? forwardInput * FORWARD_MULTIPLIER_BOOST : 0;
 		} else {
@@ -187,6 +190,20 @@ public class WheelSystem extends RobotSystem {
 	public void resetGyro() {
 		gyro.reset();
 		targetAngle = gyro.getAngle();
+	}
+	
+	/**
+	 * Set the direction of driving to be backwards
+	 */
+	public void faceBackwards() {
+		isForwardInverted = true;
+	}
+	
+	/**
+	 * Set the direction of driving to be forwards
+	 */
+	public void faceForwards() {
+		isForwardInverted = false;
 	}
 	
 	/* (non-Javadoc)

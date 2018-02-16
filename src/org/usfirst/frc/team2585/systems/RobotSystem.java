@@ -10,11 +10,13 @@ import org.usfirst.frc.team2585.robot.Environment;
  */
 public abstract class RobotSystem implements Destroyable, Initializable, Runnable {
 	protected InputMethod input;
+	protected Environment environment;
 	
 	/* (non-Javadoc)
 	 * @see org.usfirst.frc.team2585.systems.Initializable#init(org.usfirst.frc.team2585.Environment)
 	 */
 	public void init(Environment environ) {
+		environment = environ;
 		input = environ.getInput();
 	}
 	

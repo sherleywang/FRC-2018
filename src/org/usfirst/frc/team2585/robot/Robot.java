@@ -37,9 +37,7 @@ public class Robot extends ExecutorBasedRobot {
 		chooser.addObject("straight", commands.new Straight());
 		chooser.addObject("speed test", commands.new SpeedTest());
 		chooser.addObject("none", commands.new None());
-		SmartDashboard.putData("Auton choices", chooser);
-		
-		CameraServer.getInstance().startAutomaticCapture();
+		SmartDashboard.putData("Auton choices", chooser);		
 	}
 	
 	/**

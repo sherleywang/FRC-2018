@@ -91,6 +91,13 @@ public class XBoxInput extends InputMethod {
 	public boolean shouldBoost(){
 		return controller.getRawButton(XboxConstants.LEFT_BUMPER);
 	}
+
+	/* (non-Javadoc)
+	 * @see org.usfirst.frc.team2585.input.InputMethod#shouldSwitchCamera()
+	 */
+	public boolean shouldSwitchCamera() {
+		return controller.getRawButton(XboxConstants.RIGHT_BUMPER);
+	}
 	
 	/* (non-Javadoc)
 	* @see org.usfirst.frc.team2585.input.InputMethod#shouldCalibrate()
