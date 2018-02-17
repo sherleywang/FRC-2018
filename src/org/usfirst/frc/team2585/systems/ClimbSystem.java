@@ -9,9 +9,12 @@ import org.usfirst.frc.team2585.robot.RobotMap;
  */
 public class ClimbSystem extends RobotSystem {
 	
-	RampedSpeedController climbMotor;
+	RampedSpeedController climbMotorLeft;
+	RampedSpeedController climbMotorRight;
 	
-	static double motorSpeed = 0.5;
+	RampedSpeedController hookExtender;
+	
+	static double motorSpeed = 0.65;
 	
 	/* (non-Javadoc)
 	 * @see org.usfirst.frc.team2585.systems.RobotSystem#init(org.usfirst.frc.team2585.robot.Environment)
@@ -20,7 +23,10 @@ public class ClimbSystem extends RobotSystem {
 	public void init(Environment environ) {
 		super.init(environ);
 
-		climbMotor = new RampedSpeedController (RobotMap.CLIMB_MOTOR);
+		climbMotorLeft = new RampedSpeedController (RobotMap.CLIMB_MOTOR_LEFT);
+		climbMotorRight = new RampedSpeedController (RobotMap.CLIMB_MOTOR_RIGHT);
+		
+		hookExtender = new RampedSpeedController (RobotMap.CLIMB_MOTOR_RIGHT);
 	}
 
 	/* (non-Javadoc)
@@ -28,7 +34,9 @@ public class ClimbSystem extends RobotSystem {
 	 */
 	@Override
 	public void destroy() {
-		climbMotor.destroy();
+		climbMotorLeft.destroy();
+		climbMotorRight.destroy();
+		hookExtender.destroy();
 	}
 
 	/* (non-Javadoc)
@@ -36,25 +44,36 @@ public class ClimbSystem extends RobotSystem {
 	 */
 	@Override
 	public void run() {
-		if(input.shouldClimb() && input.shouldRetractArm()){
-			//return if both buttons are pressed
-			return;
-		} else if(input.shouldClimb()){
-			//climb by turning motor if Y button is pressed
-			setMotorSpeed(motorSpeed);
-		} else if(input.shouldRetractArm()){
-			//turn the arm the other way in case of a screw-up
-			setMotorSpeed(-motorSpeed);
+		if(input.shouldClimb()){
+			setClimbMotorSpeed(motorSpeed);
 		} else {
-			setMotorSpeed(0);
+			setClimbMotorSpeed(0);
+		}
+		
+		if (input.shouldExtendHook() && input.shouldRetractHook()) {
+			setHookExtenderSpeed(0);
+		} else if (input.shouldExtendHook()) {
+			setHookExtenderSpeed(motorSpeed);
+		} else if (input.shouldRetractHook()){
+			setHookExtenderSpeed(-motorSpeed);
+		} else {
+			setHookExtenderSpeed(0);
 		}
 	}
 	
 	/**
 	 * @param speed the speed to ramp the motor to
 	 */
-	public void setMotorSpeed(double speed) {
-		climbMotor.updateWithSpeed(speed);
+	public void setClimbMotorSpeed(double speed) {
+		climbMotorLeft.updateWithSpeed(speed);
+		climbMotorRight.updateWithSpeed(speed);
+	}
+	
+	/**
+	 * @param speed the speed to set the hook extending motor to
+	 */
+	public void setHookExtenderSpeed(double speed) {
+		hookExtender.updateWithSpeed(speed);
 	}
 
 	/* (non-Javadoc)
@@ -62,6 +81,7 @@ public class ClimbSystem extends RobotSystem {
 	 */
 	@Override
 	public void stop() {
-		climbMotor.updateWithSpeed(0);
+		climbMotorLeft.updateWithSpeed(0);
+		climbMotorRight.updateWithSpeed(0);
 	}
 }

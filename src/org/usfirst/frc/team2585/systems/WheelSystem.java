@@ -81,7 +81,7 @@ public class WheelSystem extends RobotSystem {
 		double rate = getGyroRate() * DERIVATIVE_MULTIPLIER;
 		double correction = (getAngleError() - rate) * CORRECTION_MULTIPLIER;
 		
-		// Min correction
+		// Min corrections
 		if (Math.abs(correction) < 0.001) correction = 0;
 		// Max correction
 		if (Math.abs(correction) > MAX_CORRECTION) {

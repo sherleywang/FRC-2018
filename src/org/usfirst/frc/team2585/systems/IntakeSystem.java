@@ -14,7 +14,7 @@ public class IntakeSystem extends RobotSystem implements Runnable {
 	RampedSpeedController intakeMotorLeft;
 
 	// These numbers need to be adjusted after testing
-	static double motorSpeed = 0.9;
+	static double motorSpeed = 0.65;
 
 
 	/* (non-Javadoc)

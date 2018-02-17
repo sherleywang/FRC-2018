@@ -24,7 +24,7 @@ public class XBoxInput extends InputMethod {
 	 */
 	@Override
 	public boolean shouldIntake() {
-		return controller.getRawAxis(XboxConstants.LEFT_TRIGGER) > minTriggerActuation;
+		return controller.getRawAxis(XboxConstants.RIGHT_TRIGGER) > minTriggerActuation;
 	}
 	
 	/* (non-Javadoc)
@@ -32,7 +32,7 @@ public class XBoxInput extends InputMethod {
 	 */
 	@Override
 	public boolean shouldOuttake() {
-		return controller.getRawAxis(XboxConstants.RIGHT_TRIGGER) > minTriggerActuation;
+		return controller.getRawAxis(XboxConstants.LEFT_TRIGGER) > minTriggerActuation;
 	}
 	
 	/* (non-Javadoc)
@@ -40,7 +40,7 @@ public class XBoxInput extends InputMethod {
 	 */
 	@Override
 	public boolean shouldRotateUp(){
-		return controller.getRawButton(XboxConstants.A_BUTTON);
+		return controller.getRawButton(XboxConstants.RIGHT_BUMPER);
 	}
 
 	/* (non-Javadoc)
@@ -48,23 +48,7 @@ public class XBoxInput extends InputMethod {
 	 */
 	@Override
 	public boolean shouldRotateDown(){
-		return controller.getRawButton(XboxConstants.B_BUTTON);
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.usfirst.frc.team2585.input.InputMethod#shouldClimb()
-	 */
-	@Override
-	public boolean shouldClimb(){
-		return controller.getRawButton(XboxConstants.Y_BUTTON);
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.usfirst.frc.team2585.input.InputMethod#shouldRetractArm()
-	 */
-	@Override
-	public boolean shouldRetractArm(){
-		return controller.getRawButton(XboxConstants.X_BUTTON);
+		return controller.getRawButton(XboxConstants.LEFT_BUMPER);
 	}
 	
 	/* (non-Javadoc)
@@ -85,17 +69,38 @@ public class XBoxInput extends InputMethod {
 	}
 	
 	/* (non-Javadoc)
+	 * @see org.usfirst.frc.team2585.input.InputMethod#shouldClimb()
+	 */
+	@Override
+	public boolean shouldClimb(){
+		return controller.getRawButton(XboxConstants.Y_BUTTON);
+	}
+	
+	/* (non-Javadoc)
 	 * @see org.usfirst.frc.team2585.input.InputMethod#shouldBoost()
 	 */
 	@Override
 	public boolean shouldBoost(){
-		return controller.getRawButton(XboxConstants.LEFT_BUMPER);
+		return controller.getRawButton(XboxConstants.B_BUTTON);
 	}
 	
 	/* (non-Javadoc)
-	* @see org.usfirst.frc.team2585.input.InputMethod#shouldCalibrate()
-	* @see org.usfirst.frc.team2585.input.InputMethod#shouldBoost()
-	*/
+	 * @see org.usfirst.frc.team2585.input.InputMethod#shouldExtendHook()
+	 */
+	public boolean shouldExtendHook() {
+		return controller.getRawButton(XboxConstants.X_BUTTON);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.usfirst.frc.team2585.input.InputMethod#shouldRetractHook()
+	 */
+	public boolean shouldRetractHook() {
+		return controller.getRawButton(XboxConstants.A_BUTTON);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.usfirst.frc.team2585.input.InputMethod#shouldCalibrate()
+	 */
 	@Override
 	public boolean shouldCalibrate() {
 		return controller.getRawButton(XboxConstants.START_BUTTON);

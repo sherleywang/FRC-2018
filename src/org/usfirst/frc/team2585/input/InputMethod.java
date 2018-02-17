@@ -40,13 +40,6 @@ public abstract class InputMethod {
 	}
 	
 	/**
-	 * @return a boolean denoting whether or not the robot's climb arm should return to its original position
-	 */
-	public boolean shouldRetractArm() {
-		return false;
-	}
-	
-	/**
 	 * @return the amount that the robot should drive forward
 	 */
 	public double forwardAmount() {
@@ -68,10 +61,23 @@ public abstract class InputMethod {
 	}
 	
 	/**
+	 * @return whether the hook should extend
+	 */
+	public boolean shouldExtendHook() {
+		return false;
+	}
+	
+	/**
+	 * @return whether the hook should retract
+	 */
+	public boolean shouldRetractHook() {
+		return false;
+	}
+	
+	/**
 	 * @return whether the robot gyro should recalibrate
 	 */
 	public boolean shouldCalibrate() {
 	 		return false;
-	 	}
-
+	}
 }
