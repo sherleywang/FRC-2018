@@ -29,6 +29,7 @@ public class WheelSystem extends RobotSystem {
 	private final double MAX_CORRECTION = 0.6;
 	
 	public static boolean IS_TEST_SYSTEM = false;
+	public static boolean IS_GYRO_DISABLED = false;
 	
 		
 	/* (non-Javadoc)
@@ -59,7 +60,7 @@ public class WheelSystem extends RobotSystem {
 		double rotationInput = input.rotationAmount();
 		rotationInput = (Math.abs(rotationInput) > DEADZONE)? rotationInput : 0;
 		
-		driveWithGyro(forwardInput, rotationInput);
+		driveWithoutGyro(forwardInput, rotationInput);
 		
 		if (input.shouldCalibrate()) {
 			gyro.calibrate();
@@ -144,7 +145,7 @@ public class WheelSystem extends RobotSystem {
 		// Both sides driving in same direction
 		// If wiring doesn't explicitly compensate for different sides, must make rightSpeed negative
 		leftDrive.updateWithSpeed(leftSpeed);
-		rightDrive.updateWithSpeed(rightSpeed);
+		rightDrive.updateWithSpeed(-rightSpeed);
 		
 		if (!IS_TEST_SYSTEM) {
 			SmartDashboard.putNumber("LEFT SPEED RAW", leftSpeed);

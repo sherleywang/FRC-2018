@@ -7,6 +7,7 @@ import org.usfirst.frc.team2585.robot.RobotMap;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * This system lifts cubes
@@ -47,6 +48,10 @@ public class CubeLiftSystem extends RobotSystem {
 	 */
 	@Override
 	public void run() {
+		SmartDashboard.putBoolean("Top Switch", isTopSwitchPressed());
+		SmartDashboard.putBoolean("Bottom Switch", isBottomSwitchPressed());
+		
+		
 		if (input.shouldRotateUp() && input.shouldRotateDown()) {
 			setMotorSpeed(0);
 		} else if(input.shouldRotateUp()){
