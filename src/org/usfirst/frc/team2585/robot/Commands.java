@@ -15,6 +15,7 @@ public class Commands {
 	private static IntakeSystem intake;
 	
 	private static final double METERS_PER_SECOND = 0.865; // ROBOT SPEED in  m/s
+	private static final double ROBOT_LENGTH = 1.0668; // LENGTH OF THE ROBOT PLUS THE BUMPERS
 	
 	/**
 	 * Constructor that sets the environment and the required systems
@@ -85,10 +86,10 @@ public class Commands {
 		private long delayTime = 2000;
 		private long timeToDepositCube = 3500;
 		
-		private long middleDistanceToSwitch = distanceToTime(3.556);
+		private long middleDistanceToSwitch = distanceToTime(3.556-ROBOT_LENGTH);
 		private long middleLeftSegment = distanceToTime(2.1336);
 		private long middleRightSegment = distanceToTime(0.9144);
-		private long sideDistanceToSwitch = distanceToTime(4.2672);
+		private long sideDistanceToSwitch = distanceToTime(4.2672-(ROBOT_LENGTH/2));
 		private long distanceInToSwitchFromSide = distanceToTime(0.9144);
 		
 		private boolean shouldResetTime = false;
