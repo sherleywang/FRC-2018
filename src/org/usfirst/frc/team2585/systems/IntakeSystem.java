@@ -4,6 +4,8 @@ import org.impact2585.lib2585.RampedSpeedController;
 import org.usfirst.frc.team2585.robot.Environment;
 import org.usfirst.frc.team2585.robot.RobotMap;
 
+import edu.wpi.first.wpilibj.Spark;
+
 
 /**
  * This system intakes the power cubes and loads them on the robot
@@ -23,9 +25,8 @@ public class IntakeSystem extends RobotSystem implements Runnable {
 	@Override
 	public void init(Environment environ) {
 		super.init(environ);
-
-		intakeMotorRight = new RampedSpeedController(RobotMap.INTAKE_MOTOR_RIGHT);
-		intakeMotorLeft = new RampedSpeedController(RobotMap.INTAKE_MOTOR_LEFT);
+		intakeMotorRight = new RampedSpeedController(new Spark(RobotMap.INTAKE_MOTOR_RIGHT));
+		intakeMotorLeft = new RampedSpeedController(new Spark(RobotMap.INTAKE_MOTOR_LEFT));
 	}
 
 	/* (non-Javadoc)

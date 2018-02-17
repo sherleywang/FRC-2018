@@ -4,6 +4,8 @@ import org.impact2585.lib2585.RampedSpeedController;
 import org.usfirst.frc.team2585.robot.Environment;
 import org.usfirst.frc.team2585.robot.RobotMap;
 
+import edu.wpi.first.wpilibj.Talon;
+
 /**
  * This system grabs onto a bar and lifts the robot up.
  */
@@ -22,11 +24,11 @@ public class ClimbSystem extends RobotSystem {
 	@Override
 	public void init(Environment environ) {
 		super.init(environ);
-
-		climbMotorLeft = new RampedSpeedController (RobotMap.CLIMB_MOTOR_LEFT);
-		climbMotorRight = new RampedSpeedController (RobotMap.CLIMB_MOTOR_RIGHT);
+		// new RampedSpeedController(new Spark(RobotMap.LEFT_DRIVE_MOTOR));
+		climbMotorLeft = new RampedSpeedController (new Talon(RobotMap.CLIMB_MOTOR_LEFT));
+		climbMotorRight = new RampedSpeedController (new Talon(RobotMap.CLIMB_MOTOR_RIGHT));
 		
-		hookExtender = new RampedSpeedController (RobotMap.CLIMB_MOTOR_RIGHT);
+		hookExtender = new RampedSpeedController (new Talon(RobotMap.CLIMB_MOTOR_RIGHT));
 	}
 
 	/* (non-Javadoc)
