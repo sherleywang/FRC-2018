@@ -24,11 +24,11 @@ public class ClimbSystem extends RobotSystem {
 	@Override
 	public void init(Environment environ) {
 		super.init(environ);
-		// new RampedSpeedController(new Spark(RobotMap.LEFT_DRIVE_MOTOR));
+	
 		climbMotorLeft = new RampedSpeedController (new Talon(RobotMap.CLIMB_MOTOR_LEFT));
 		climbMotorRight = new RampedSpeedController (new Talon(RobotMap.CLIMB_MOTOR_RIGHT));
 		
-		hookExtender = new RampedSpeedController (new Talon(RobotMap.CLIMB_MOTOR_RIGHT));
+		hookExtender = new RampedSpeedController (new Talon(RobotMap.HOOK_EXTENDER_MOTOR));
 	}
 
 	/* (non-Javadoc)

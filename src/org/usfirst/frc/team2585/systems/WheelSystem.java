@@ -172,14 +172,14 @@ public class WheelSystem extends RobotSystem {
 	 * @return the current angle that the robot is facing from the gyroscope
 	 */
 	protected double getGyroAngle() {
-		return -gyro.getAngle(); // Negated because gyro is facing backwards
+		return gyro.getAngle(); // Negated if gyro is facing backwards
 	}
 	
 	/**
 	 * @return the rate that the robot is rotating from the gyroscope
 	 */
 	protected double getGyroRate() {
-		return -gyro.getRate(); // Negated because gyro is facing backwards
+		return gyro.getRate(); // Negated if gyro is facing backwards
 	}
 	
 	/**

@@ -18,6 +18,6 @@ public interface RobotMap {
 	public static final int CLIMB_MOTOR_RIGHT = 7;
 	
 	// SENSORS
-	public static final int LIMIT_SWITCH_TOP = 8;
-	public static final int LIMIT_SWITCH_BOTTOM = 9;
+	public static final int LIMIT_SWITCH_TOP = 0;
+	public static final int LIMIT_SWITCH_BOTTOM = 1;
 }

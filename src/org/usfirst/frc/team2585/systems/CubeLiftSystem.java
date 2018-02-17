@@ -48,8 +48,8 @@ public class CubeLiftSystem extends RobotSystem {
 	 */
 	@Override
 	public void run() {
-		SmartDashboard.putBoolean("Top Switch", isTopSwitchPressed());
-		SmartDashboard.putBoolean("Bottom Switch", isBottomSwitchPressed());
+		SmartDashboard.putBoolean("Switch-TOP", isTopSwitchPressed());
+		SmartDashboard.putBoolean("Switch-BOTTOM", isBottomSwitchPressed());
 		
 		
 		if (input.shouldRotateUp() && input.shouldRotateDown()) {
@@ -90,12 +90,12 @@ public class CubeLiftSystem extends RobotSystem {
      * @return whether the top limit switch is pressed
      */
     public boolean isTopSwitchPressed() {
-    		return limitSwitchTop.get();
+    		return !limitSwitchTop.get();
     }
     /**
      * @return whether the bottom limit switch is pressed
      */
     public boolean isBottomSwitchPressed() {
-        return limitSwitchBottom.get();
+        return !limitSwitchBottom.get();
     }
 }
