@@ -60,7 +60,7 @@ public class WheelSystem extends RobotSystem {
 		double rotationInput = input.rotationAmount();
 		rotationInput = (Math.abs(rotationInput) > DEADZONE)? rotationInput : 0;
 		
-		driveWithoutGyro(forwardInput, rotationInput);
+		driveWithGyro(forwardInput, rotationInput);
 		
 		if (input.shouldCalibrate()) {
 			gyro.calibrate();
@@ -92,7 +92,7 @@ public class WheelSystem extends RobotSystem {
 		if (!IS_TEST_SYSTEM) {
 			SmartDashboard.putNumber("Gyro Angle",  getGyroAngle());
 			SmartDashboard.putNumber("Gyro Target Angle",  targetAngle);
-			SmartDashboard.putNumber("Gyro Rate",   getGyroAngle());
+			SmartDashboard.putNumber("Gyro Rate",   getGyroRate());
 		}
 		
 		return correction;
@@ -144,8 +144,8 @@ public class WheelSystem extends RobotSystem {
 		
 		// Both sides driving in same direction
 		// If wiring doesn't explicitly compensate for different sides, must make rightSpeed negative
-		leftDrive.updateWithSpeed(leftSpeed);
-		rightDrive.updateWithSpeed(-rightSpeed);
+		leftDrive.updateWithSpeed(-leftSpeed);
+		rightDrive.updateWithSpeed(rightSpeed);
 		
 		if (!IS_TEST_SYSTEM) {
 			SmartDashboard.putNumber("LEFT SPEED RAW", leftSpeed);
@@ -172,14 +172,14 @@ public class WheelSystem extends RobotSystem {
 	 * @return the current angle that the robot is facing from the gyroscope
 	 */
 	protected double getGyroAngle() {
-		return gyro.getAngle(); // Negated if gyro is facing backwards
+		return -gyro.getAngle(); 
 	}
 	
 	/**
 	 * @return the rate that the robot is rotating from the gyroscope
 	 */
 	protected double getGyroRate() {
-		return gyro.getRate(); // Negated if gyro is facing backwards
+		return -gyro.getRate();
 	}
 	
 	/**
