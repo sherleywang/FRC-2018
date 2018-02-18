@@ -19,6 +19,8 @@ public class CubeLiftSystem extends RobotSystem {
 	RampedSpeedController liftMotor;
 	
 	static double motorSpeed = 0.65;
+	public static boolean IS_TEST_SYSTEM = false;
+
 	
 	/* (non-Javadoc)
 	 * @see org.usfirst.frc.team2585.systems.RobotSystem#init(org.usfirst.frc.team2585.robot.Environment)
@@ -48,10 +50,6 @@ public class CubeLiftSystem extends RobotSystem {
 	 */
 	@Override
 	public void run() {
-		SmartDashboard.putBoolean("Switch-TOP", isTopSwitchPressed());
-		SmartDashboard.putBoolean("Switch-BOTTOM", isBottomSwitchPressed());
-		
-		
 		if (input.shouldRotateUp() && input.shouldRotateDown()) {
 			setMotorSpeed(0);
 		} else if(input.shouldRotateUp()){
@@ -68,6 +66,11 @@ public class CubeLiftSystem extends RobotSystem {
 			}
 		} else {
 			setMotorSpeed(0);
+		}
+		
+		if (!IS_TEST_SYSTEM) {
+			SmartDashboard.putBoolean("Switch-TOP", isTopSwitchPressed());
+			SmartDashboard.putBoolean("Switch-BOTTOM", isBottomSwitchPressed());
 		}
 	}
 	
