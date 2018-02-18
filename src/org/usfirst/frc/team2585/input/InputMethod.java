@@ -75,9 +75,9 @@ public abstract class InputMethod {
 	}
 	
 	/**
-	 * @return whether the robot gyro should recalibrate
+	 * @return whether the robot turn on/off using the gyro
 	 */
-	public boolean shouldCalibrate() {
+	public boolean shouldToggleGyro() {
 	 		return false;
 	}
 }

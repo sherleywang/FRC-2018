@@ -28,8 +28,10 @@ public class WheelSystem extends RobotSystem {
 	private final double CORRECTION_MULTIPLIER = 0.01;
 	private final double MAX_CORRECTION = 0.6;
 	
+	public boolean isUsingGyro = true;
+	public boolean pastToggle = false;
+
 	public static boolean IS_TEST_SYSTEM = false;
-	public static boolean IS_GYRO_DISABLED = false;
 	
 		
 	/* (non-Javadoc)
@@ -60,12 +62,18 @@ public class WheelSystem extends RobotSystem {
 		double rotationInput = input.rotationAmount();
 		rotationInput = (Math.abs(rotationInput) > DEADZONE)? rotationInput : 0;
 		
-		driveWithGyro(forwardInput, rotationInput);
-		
-		if (input.shouldCalibrate()) {
-			gyro.calibrate();
-			resetGyro();
+		if (isUsingGyro) {
+			driveWithGyro(forwardInput, rotationInput);
+		} else {
+			driveWithoutGyro(forwardInput, rotationInput);
 		}
+		
+		if (input.shouldToggleGyro() && !pastToggle) {
+			isUsingGyro = true;
+		} else if (pastToggle && !input.shouldToggleGyro()) {
+			isUsingGyro = false;
+		}
+		pastToggle = input.shouldToggleGyro();
 	}
 	
 	/**
@@ -116,6 +124,7 @@ public class WheelSystem extends RobotSystem {
 	 * @param rotationInput the amount to rotate. -1 is clockwise, 1 is counter-clockwise
 	 */
 	public void driveWithoutGyro(double forwardInput, double rotationInput) {
+		resetGyro();
 		arcadeDrive(forwardInput, rotationInput);
 	}
 	
@@ -172,14 +181,14 @@ public class WheelSystem extends RobotSystem {
 	 * @return the current angle that the robot is facing from the gyroscope
 	 */
 	protected double getGyroAngle() {
-		return -gyro.getAngle(); 
+		return -gyro.getAngle(); // negated to make positive counter-clockwise
 	}
 	
 	/**
 	 * @return the rate that the robot is rotating from the gyroscope
 	 */
 	protected double getGyroRate() {
-		return -gyro.getRate();
+		return -gyro.getRate(); // negated to make positive counter-clockwise
 	}
 	
 	/**

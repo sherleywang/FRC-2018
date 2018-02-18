@@ -99,10 +99,10 @@ public class XBoxInput extends InputMethod {
 	}
 	
 	/* (non-Javadoc)
-	 * @see org.usfirst.frc.team2585.input.InputMethod#shouldCalibrate()
+	 * @see org.usfirst.frc.team2585.input.InputMethod#shouldToggleGyro()
 	 */
 	@Override
-	public boolean shouldCalibrate() {
+	public boolean shouldToggleGyro() {
 		return controller.getRawButton(XboxConstants.START_BUTTON);
 	}
 }
