@@ -159,23 +159,56 @@ public class WheelSystemTest {
 	 */
 	@Test
 	public void testTurnLeftWithoutGyro() {
-		rotationInput = 1;
-		wheelSystem.run();
+		wheelSystem.driveWithoutGyro(0, 1);
 		
 		Assert.assertTrue(leftOutput < 0);
 		Assert.assertTrue(rightOutput > 0);
+		Assert.assertTrue(rotationOutput > 0);
 	}
 	
 	/**
-	 * Test turning right without the gyro
+	 * Test turning without the gyro
 	 */
 	@Test
 	public void testTurnRightWithoutGyro() {
-		rotationInput = -1;
-		wheelSystem.run();
+		wheelSystem.driveWithoutGyro(0, -1);
 		
 		Assert.assertTrue(leftOutput > 0);
 		Assert.assertTrue(rightOutput < 0);
+		Assert.assertTrue(rotationOutput < 0);
+	}
+	
+	/**
+	 * Test turning left with the gyro
+	 */
+	@Test
+	public void testTurnLeftWithGyro() {
+		wheelSystem.driveWithGyro(0, 1);
+		
+		Assert.assertTrue(leftOutput < 0);
+		Assert.assertTrue(rightOutput > 0);
+		Assert.assertTrue(rotationOutput > 0);
+	}
+	
+	/**
+	 * Test turning right with the gyro
+	 */
+	@Test
+	public void testTurnRightWithGyro() {
+		wheelSystem.driveWithGyro(0, -1);
+		
+		Assert.assertTrue(leftOutput > 0);
+		Assert.assertTrue(rightOutput < 0);
+		Assert.assertTrue(rotationOutput < 0);
+	}
+	
+	public void testRotateToAngle() {
+		wheelSystem.rotateToAngle(90.0);
+		
+		Assert.assertTrue(rotationOutput < 0);
+		
+		wheelSystem.rotateToAngle(-90.0);
+		Assert.assertTrue(rotationOutput > 0);
 	}
 	
 	/**
@@ -390,7 +423,6 @@ public class WheelSystemTest {
 		
 		toggleGyroInput = true;
 		wheelSystem.run();
-		System.out.println(rotationOutput);
 		Assert.assertTrue(rotationOutput == 0);
 	}
 	
