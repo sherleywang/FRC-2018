@@ -17,9 +17,13 @@ public class WheelSystemTest {
 	private double forwardInput;
 	private double rotationInput;
 	private boolean boostInput;
+	private boolean toggleGyroInput;
 	
 	private double forwardOutput;
 	private double rotationOutput;
+	
+	private double leftOutput;
+	private double rightOutput;
 	
 	private double gyroAngle;
 	private double gyroRate;
@@ -52,6 +56,7 @@ public class WheelSystemTest {
 		forwardInput = 0;
 		rotationInput = 0;
 		boostInput = false;
+		toggleGyroInput = false;
 		forwardOutput = 0;
 		rotationOutput = 0;
 	}
@@ -131,6 +136,46 @@ public class WheelSystemTest {
 		wheelSystem.run();
 		wheelSystem.run();
 		Assert.assertTrue(rotationOutput < 0);
+	}
+	
+	/**
+	 * Test that the robot can drive forward without the gyro
+	 */
+	@Test
+	public void testDriveForward() {
+		forwardInput = 1;
+		wheelSystem.run();
+		Assert.assertTrue(forwardOutput > 0);
+		Assert.assertTrue(rotationOutput == 0);
+		
+		Assert.assertTrue(leftOutput > 0);
+		Assert.assertTrue(rightOutput > 0);
+		
+		Assert.assertTrue(leftOutput == rightOutput);
+	}
+	
+	/**
+	 * Test turning left without the gyro
+	 */
+	@Test
+	public void testTurnLeftWithoutGyro() {
+		rotationInput = 1;
+		wheelSystem.run();
+		
+		Assert.assertTrue(leftOutput < 0);
+		Assert.assertTrue(rightOutput > 0);
+	}
+	
+	/**
+	 * Test turning right without the gyro
+	 */
+	@Test
+	public void testTurnRightWithoutGyro() {
+		rotationInput = -1;
+		wheelSystem.run();
+		
+		Assert.assertTrue(leftOutput > 0);
+		Assert.assertTrue(rightOutput < 0);
 	}
 	
 	/**
@@ -264,6 +309,10 @@ public class WheelSystemTest {
 		gyroAngle = -90;
 		wheelSystem.run();
 		Assert.assertTrue(rotationOutput > 0);
+		
+		gyroAngle = 0;
+		wheelSystem.run();
+		Assert.assertTrue(rotationOutput == 0);
 	}
 	
 	/**
@@ -331,6 +380,21 @@ public class WheelSystemTest {
 	}
 
 	/**
+	 * Test the ability to disable the gyro
+	 */
+	@Test
+	public void testGyroToggle() {
+		gyroAngle = 90.0;
+		wheelSystem.run();
+		Assert.assertTrue(rotationOutput < 0);
+		
+		toggleGyroInput = true;
+		wheelSystem.run();
+		System.out.println(rotationOutput);
+		Assert.assertTrue(rotationOutput == 0);
+	}
+	
+	/**
 	 * Testable input for the wheel system tests
 	 */
 	private class TestInput extends InputMethod {
@@ -357,19 +421,37 @@ public class WheelSystemTest {
 		public boolean shouldBoost() {
 			return boostInput;
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.usfirst.frc.team2585.input.InputMethod#shouldToggleGyro()
+		 */
+		@Override
+		public boolean shouldToggleGyro() {
+			return toggleGyroInput;
+		}
 	}
 	
 	/**
 	 * A testable wheel system
 	 */
 	private class TestWheelSystem extends WheelSystem {
+		/* (non-Javadoc)
+		 * @see org.usfirst.frc.team2585.systems.WheelSystem#setSideSpeeds(double, double)
+		 */
+		@Override
+		protected void setSideSpeeds(double leftSpeed, double rightSpeed) {
+			leftOutput = leftSpeed;
+			rightOutput = rightSpeed;
+		}
 		
 		/* (non-Javadoc)
 		 * @see org.usfirst.frc.team2585.systems.WheelSystem#arcadeDrive(double, double)
 		 */
 		@Override
 		public void arcadeDrive(double forward, double rotation){
-			forwardOutput = -forward; // direction is reversed
+			super.arcadeDrive(forward, rotation);
+			
+			forwardOutput = forward;
 			rotationOutput = rotation;
 		}
 		

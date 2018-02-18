@@ -52,7 +52,7 @@ public class WheelSystem extends RobotSystem {
 	 * Pass the user inputs to the drive train to run the motors the appropriate amounts
 	 */
 	public void run() {
-		double forwardInput = -input.forwardAmount(); // reverse direction of driving
+		double forwardInput = input.forwardAmount(); // reverse direction of driving
 		if(input.shouldBoost()){
 			forwardInput = (Math.abs(forwardInput) > DEADZONE)? forwardInput * FORWARD_MULTIPLIER_BOOST : 0;
 		} else {
@@ -62,18 +62,16 @@ public class WheelSystem extends RobotSystem {
 		double rotationInput = input.rotationAmount();
 		rotationInput = (Math.abs(rotationInput) > DEADZONE)? rotationInput : 0;
 		
+		if (input.shouldToggleGyro() != pastToggle) {
+			isUsingGyro = !isUsingGyro;
+		} 
+		pastToggle = input.shouldToggleGyro();
+		
 		if (isUsingGyro) {
 			driveWithGyro(forwardInput, rotationInput);
 		} else {
 			driveWithoutGyro(forwardInput, rotationInput);
 		}
-		
-		if (input.shouldToggleGyro() && !pastToggle) {
-			isUsingGyro = true;
-		} else if (pastToggle && !input.shouldToggleGyro()) {
-			isUsingGyro = false;
-		}
-		pastToggle = input.shouldToggleGyro();
 	}
 	
 	/**
@@ -147,14 +145,14 @@ public class WheelSystem extends RobotSystem {
 	 * @param leftSpeed the speed to set the left side to
 	 * @param rightSpeed the speed to set the right side to
 	 */
-	private void setSideSpeeds(double leftSpeed, double rightSpeed) {
+	protected void setSideSpeeds(double leftSpeed, double rightSpeed) {
 		if (Math.abs(leftSpeed) > 1) leftSpeed = Math.copySign(1, leftSpeed);
 		if (Math.abs(rightSpeed) > 1) rightSpeed = Math.copySign(1, rightSpeed);
 		
 		// Both sides driving in same direction
 		// If wiring doesn't explicitly compensate for different sides, must make rightSpeed negative
-		leftDrive.updateWithSpeed(-leftSpeed);
-		rightDrive.updateWithSpeed(rightSpeed);
+		leftDrive.updateWithSpeed(leftSpeed);
+		rightDrive.updateWithSpeed(-rightSpeed);
 		
 		if (!IS_TEST_SYSTEM) {
 			SmartDashboard.putNumber("LEFT SPEED RAW", leftSpeed);
@@ -195,8 +193,11 @@ public class WheelSystem extends RobotSystem {
 	 * Reset the angle of the gyroscope
 	 */
 	public void resetGyro() {
-		gyro.reset();
-		targetAngle = gyro.getAngle();
+		if (!IS_TEST_SYSTEM) {
+			gyro.reset();
+		}
+		
+		targetAngle = getGyroAngle();
 	}
 	
 	/* (non-Javadoc)
