@@ -28,7 +28,7 @@ public class WheelSystem extends RobotSystem {
 	private final double CORRECTION_MULTIPLIER = 0.01;
 	private final double MAX_CORRECTION = 0.6;
 	
-	public boolean isUsingGyro = true;
+	public boolean isUsingGyro = false;
 	public boolean pastToggle = false;
 
 	public static boolean IS_TEST_SYSTEM = false;
