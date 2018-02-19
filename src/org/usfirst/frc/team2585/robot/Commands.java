@@ -1,6 +1,6 @@
 package org.usfirst.frc.team2585.robot;
 
-import org.usfirst.frc.team2585.systems.IntakeSystem;
+import org.usfirst.frc.team2585.systems.CubeLiftSystem;
 import org.usfirst.frc.team2585.systems.WheelSystem;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -12,7 +12,7 @@ public class Commands {
 	
 	private static Environment environ;
 	private static WheelSystem drivetrain;
-	private static IntakeSystem intake;
+	private static CubeLiftSystem cubeLift;
 	
 	private static final double METERS_PER_SECOND = 0.865; // ROBOT SPEED in  m/s
 	private static final double ROBOT_LENGTH = 1.0668; // LENGTH OF THE ROBOT PLUS THE BUMPERS
@@ -25,7 +25,7 @@ public class Commands {
 		environ = env;
 
 		drivetrain = (WheelSystem) environ.getSystem(Environment.WHEEL_SYSTEM);
-		intake = (IntakeSystem) environ.getSystem(Environment.INTAKE_SYSTEM);
+		cubeLift = (CubeLiftSystem) environ.getSystem(Environment.CUBE_LIFT_SYSTEM);
 	}
 	
 	/**
@@ -67,7 +67,7 @@ public class Commands {
 	 * Use the intake system to deposit a cube
 	 */
 	private static void depositCube() {
-		intake.depositCube();
+		cubeLift.rotateUp();
 	}
 	
 	/**
@@ -84,7 +84,7 @@ public class Commands {
 	 */
 	public class Main extends AutonomousCommand {
 		private long delayTime = 2000;
-		private long timeToDepositCube = 3500;
+		private long timeToDepositCube = 1500;
 		
 		private long middleDistanceToSwitch = distanceToTime(3.556-ROBOT_LENGTH);
 		private long middleLeftSegment = distanceToTime(2.1336);

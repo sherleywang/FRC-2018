@@ -53,17 +53,9 @@ public class CubeLiftSystem extends RobotSystem {
 		if (input.shouldRotateUp() && input.shouldRotateDown()) {
 			setMotorSpeed(0);
 		} else if(input.shouldRotateUp()){
-			if(isTopSwitchPressed()){
-				setMotorSpeed(0);
-			} else {
-				setMotorSpeed(motorSpeed);
-			}
+			rotateUp();
 		} else if(input.shouldRotateDown()){
-			if(isBottomSwitchPressed()){
-				setMotorSpeed(0);
-			} else {
-				setMotorSpeed(-motorSpeed);
-			}
+			rotateDown();
 		} else {
 			setMotorSpeed(0);
 		}
@@ -79,6 +71,28 @@ public class CubeLiftSystem extends RobotSystem {
 	 */
 	public void setMotorSpeed(double speed) {
 		liftMotor.updateWithSpeed(motorSpeed);
+	}
+	
+	/**
+	 * Rotate the arm up if the switch isn't pressed yet
+	 */
+	public void rotateUp() {
+		if(isTopSwitchPressed()){
+			setMotorSpeed(0);
+		} else {
+			setMotorSpeed(motorSpeed);
+		}
+	}
+	
+	/**
+	 * Rotate the arm down if the switch isn't pressed yet
+	 */
+	public void rotateDown() {
+		if(isBottomSwitchPressed()){
+			setMotorSpeed(0);
+		} else {
+			setMotorSpeed(-motorSpeed);
+		}
 	}
 
 	/* (non-Javadoc)

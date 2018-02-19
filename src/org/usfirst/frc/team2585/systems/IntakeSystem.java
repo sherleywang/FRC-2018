@@ -43,7 +43,7 @@ public class IntakeSystem extends RobotSystem implements Runnable {
 		}
 		// outtake and reverse motors if right trigger is pressed
 		else if (input.shouldOuttake()) {
-			depositCube();
+			outtakeCube();
 		}
 		else {
 			setMotorSpeed(0);
@@ -60,7 +60,7 @@ public class IntakeSystem extends RobotSystem implements Runnable {
 	/**
 	 * Deposit a cube by running the motors in the outtake direction
 	 */
-	public void depositCube() {
+	public void outtakeCube() {
 		setMotorSpeed(-motorSpeed);
 	}
 
