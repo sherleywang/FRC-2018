@@ -23,6 +23,6 @@ public interface RobotMap {
 	public static final int LIMIT_SWITCH_BOTTOM = 1;
 	
 	// POWER DISTRIBUTION PANEL
-	public static final int LEFT_INTAKE_PDP_SLOT = 0;
-	public static final int RIGHT_INTAKE_PDP_SLOT = 1;
+	public static final int LEFT_INTAKE_PDP_SLOT = 10;
+	public static final int RIGHT_INTAKE_PDP_SLOT = 11;
 }
