@@ -9,7 +9,6 @@ import org.usfirst.frc.team2585.systems.IntakeSystem;
 /**
  * Unit Tests for the intake system
  */
-
 public class IntakeSystemTest {
 	private TestInput input;
 	private TestIntakeSystem intakeSystem;
@@ -17,7 +16,11 @@ public class IntakeSystemTest {
 	boolean shouldIntakeInput;
 	boolean shouldOuttakeInput;
 	
-	double motorSpeedOutput;
+	double leftSpeedOutput;
+	double rightSpeedOutput;
+	
+	double leftCurrentIn;
+	double rightCurrentIn;
 	
 	/**
 	 * Create new input and intake system for testing
@@ -27,6 +30,9 @@ public class IntakeSystemTest {
 		input = new TestInput();
 		intakeSystem = new TestIntakeSystem();
 		intakeSystem.setInput(input);
+		
+		leftCurrentIn = 0;
+		rightCurrentIn = 0;
 	}
 	
 	/**
@@ -38,7 +44,8 @@ public class IntakeSystemTest {
 		shouldIntakeInput = false;
 		shouldOuttakeInput = false;
 		intakeSystem.run();
-		Assert.assertTrue(motorSpeedOutput == 0);
+		Assert.assertTrue(leftSpeedOutput == 0);
+		Assert.assertTrue(rightSpeedOutput == 0);
 	}
 	
 	/**
@@ -49,7 +56,8 @@ public class IntakeSystemTest {
 		shouldIntakeInput = true;
 		shouldOuttakeInput = false;
 		intakeSystem.run();
-		Assert.assertTrue(motorSpeedOutput > 0);
+		Assert.assertTrue(leftSpeedOutput > 0);
+		Assert.assertTrue(rightSpeedOutput > 0);
 	}
 	
 	/**
@@ -60,7 +68,8 @@ public class IntakeSystemTest {
 		shouldIntakeInput = false;
 		shouldOuttakeInput = true;
 		intakeSystem.run();
-		Assert.assertTrue(motorSpeedOutput < 0);
+		Assert.assertTrue(leftSpeedOutput < 0);
+		Assert.assertTrue(rightSpeedOutput < 0);
 	}
 	
 	/**
@@ -71,7 +80,8 @@ public class IntakeSystemTest {
 		shouldIntakeInput = true;
 		shouldOuttakeInput = true;
 		intakeSystem.run();
-		Assert.assertTrue(motorSpeedOutput == 0);
+		Assert.assertTrue(leftSpeedOutput == 0);
+		Assert.assertTrue(rightSpeedOutput == 0);
 	}
 	
 	/**
@@ -83,7 +93,8 @@ public class IntakeSystemTest {
 		intakeSystem.run();
 		shouldIntakeInput = false;
 		intakeSystem.run();
-		Assert.assertTrue(motorSpeedOutput == 0);
+		Assert.assertTrue(leftSpeedOutput == 0);
+		Assert.assertTrue(rightSpeedOutput == 0);
 	}
 	
 	/**
@@ -95,7 +106,8 @@ public class IntakeSystemTest {
 		intakeSystem.run();
 		shouldOuttakeInput = false;
 		intakeSystem.run();
-		Assert.assertTrue(motorSpeedOutput == 0);
+		Assert.assertTrue(leftSpeedOutput == 0);
+		Assert.assertTrue(rightSpeedOutput == 0);
 	}
 	
 	/**
@@ -109,7 +121,95 @@ public class IntakeSystemTest {
 		shouldIntakeInput = false;
 		shouldOuttakeInput = false;
 		intakeSystem.run();
-		Assert.assertTrue(motorSpeedOutput == 0);
+		Assert.assertTrue(leftSpeedOutput == 0);
+		Assert.assertTrue(rightSpeedOutput == 0);
+	}
+	
+	/**
+	 * Tests that the intake automatically rotates the cube left when the current draw is too high
+	 */
+	@Test
+	public void automaticallyRotatesLeft() {
+		shouldIntakeInput = true;
+		intakeSystem.run();
+		leftCurrentIn = 15;
+		rightCurrentIn = 12;
+		// left current higher, should rotate left side backwards
+		for (int i=0; i<3; i++) {
+			intakeSystem.run();
+			Assert.assertTrue(leftSpeedOutput < 0);
+			Assert.assertTrue(rightSpeedOutput > 0);
+		}
+		
+		// after 50 runs, should return to normal intake
+		leftCurrentIn = 0;
+		rightCurrentIn = 0;
+		for (int i=0; i<50; i++) {
+			intakeSystem.run();
+		}
+		
+		for (int i=0; i<3; i++) {
+			intakeSystem.run();
+			Assert.assertTrue(leftSpeedOutput > 0);
+			Assert.assertTrue(rightSpeedOutput > 0);
+		}
+	}
+	
+	/**
+	 * Tests that the intake automatically rotates the cube right when the current draw is too high
+	 */
+	@Test
+	public void automaticallyRotatesRight() {
+		shouldIntakeInput = true;
+		intakeSystem.run();
+		leftCurrentIn = 12;
+		rightCurrentIn = 15;
+		// left current higher, should rotate left side backwards
+		for (int i=0; i<3; i++) {
+			intakeSystem.run();
+			Assert.assertTrue(leftSpeedOutput > 0);
+			Assert.assertTrue(rightSpeedOutput < 0);
+		}
+		
+		// after 50 runs, should return to normal intake
+		leftCurrentIn = 0;
+		rightCurrentIn = 0;
+		for (int i=0; i<50; i++) {
+			intakeSystem.run();
+		}
+		
+		for (int i=0; i<3; i++) {
+			intakeSystem.run();
+			Assert.assertTrue(leftSpeedOutput > 0);
+			Assert.assertTrue(rightSpeedOutput > 0);
+		}
+	}
+	
+	@Test
+	public void stopsRotatingAfterIntake() {
+		shouldIntakeInput = true;
+		intakeSystem.run();
+		leftCurrentIn = 12;
+		rightCurrentIn = 15;
+		// left current higher, should rotate left side backwards
+		for (int i=0; i<3; i++) {
+			intakeSystem.run();
+			Assert.assertTrue(leftSpeedOutput > 0);
+			Assert.assertTrue(rightSpeedOutput < 0);
+		}
+		
+		shouldIntakeInput = false;
+		intakeSystem.run();
+		
+		Assert.assertTrue(leftSpeedOutput == 0);
+		Assert.assertTrue(rightSpeedOutput == 0);
+		
+		shouldIntakeInput = true;
+		leftCurrentIn = 0;
+		rightCurrentIn = 0;
+		intakeSystem.run();
+		Assert.assertTrue(leftSpeedOutput > 0);
+		Assert.assertTrue(rightSpeedOutput > 0);
 	}
 	
 	/**
@@ -137,11 +237,35 @@ public class IntakeSystemTest {
 	private class TestIntakeSystem extends IntakeSystem {
 		
 		/* (non-Javadoc)
-		 * @see org.usfirst.frc.team2585.systems.IntakeSystem#setMotorSpeed(double)
+		 * @see org.usfirst.frc.team2585.systems.IntakeSystem#setLeftSpeed(double)
 		 */
 		@Override
-		public void setMotorSpeed(double newSpeed) {
-			motorSpeedOutput = newSpeed;
+		public void setLeftSpeed(double newSpeed) {
+			leftSpeedOutput = newSpeed;
 		}	
+		
+		/* (non-Javadoc)
+		 * @see org.usfirst.frc.team2585.systems.IntakeSystem#setRightSpeed(double)
+		 */
+		@Override
+		public void setRightSpeed(double newSpeed) {
+			rightSpeedOutput = newSpeed;
+		}	
+		
+		/* (non-Javadoc)
+		 * @see org.usfirst.frc.team2585.systems.IntakeSystem#getLeftCurrent()
+		 */
+		@Override
+		public double getLeftCurrent() {
+			return leftCurrentIn;
+		}
+		
+		/* (non-Javadoc)
+		 * @see org.usfirst.frc.team2585.systems.IntakeSystem#getRightCurrent()
+		 */
+		@Override
+		public double getRightCurrent() {
+			return rightCurrentIn;
+		}
 	}
 }
