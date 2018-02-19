@@ -335,16 +335,16 @@ public class WheelSystemTest {
 	public void testGyro() {
 		// testing the gyro for positive values
 		gyroAngle = 90;
-		wheelSystem.run();
+		wheelSystem.driveWithGyro(0, 0);
 		Assert.assertTrue(rotationOutput < 0);
 		
 		// testing the gyro for negative values
 		gyroAngle = -90;
-		wheelSystem.run();
+		wheelSystem.driveWithGyro(0, 0);
 		Assert.assertTrue(rotationOutput > 0);
 		
 		gyroAngle = 0;
-		wheelSystem.run();
+		wheelSystem.driveWithGyro(0, 0);
 		Assert.assertTrue(rotationOutput == 0);
 	}
 	
@@ -417,13 +417,13 @@ public class WheelSystemTest {
 	 */
 	@Test
 	public void testGyroToggle() {
-		gyroAngle = 90.0;
 		wheelSystem.run();
-		Assert.assertTrue(rotationOutput < 0);
+		gyroAngle = 90.0;
+		Assert.assertTrue(rotationOutput == 0);
 		
 		toggleGyroInput = true;
 		wheelSystem.run();
-		Assert.assertTrue(rotationOutput == 0);
+		Assert.assertTrue(rotationOutput < 0);
 	}
 	
 	/**
