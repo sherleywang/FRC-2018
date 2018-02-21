@@ -14,6 +14,7 @@ public class ClimbSystemTest {
 	private TestClimbSystem climbSystem;
 	
 	boolean shouldClimb;
+	boolean shouldRewind;
 	boolean shouldExtendHook;
 	boolean shouldRetractHook;
 	
@@ -36,20 +37,34 @@ public class ClimbSystemTest {
 	@Test
 	public void defaultsToZero() {
 		shouldClimb = false;
+		shouldRewind = false;
 		shouldExtendHook = false;
 		shouldRetractHook = false;
 		climbSystem.run();
 		Assert.assertTrue(motorSpeedOutput == 0);
+		Assert.assertTrue(hookExtenderOutput == 0);
 	}
 	
 	/**
-	 * Tests that the speed of the climb motor is more than 0 when just climbing
+	 * Tests that the speed of the climb motor is more than 0 when climbing
 	 */
 	@Test
 	public void climbMotorRuns() {
 		shouldClimb = true;
+		shouldRewind = false;
 		climbSystem.run();
 		Assert.assertTrue(motorSpeedOutput > 0);
+	}
+	
+	/**
+	 * Tests that the speed of the climb motor is less than 0 when rewinding
+	 */
+	@Test
+	public void climbMotorRewinds() {
+		shouldClimb = false;
+		shouldRewind = true;
+		climbSystem.run();
+		Assert.assertTrue(motorSpeedOutput < 0);
 	}
 	
 	/**
@@ -86,6 +101,17 @@ public class ClimbSystemTest {
 	}
 	
 	/**
+	 * Tests that the speed of the climb motor is 0 when both climb and rewind are pressed
+	 */
+	@Test
+	public void climbMotorBothPressed() {
+		shouldClimb = true;
+		shouldRewind = true;
+		climbSystem.run();
+		Assert.assertTrue(motorSpeedOutput == 0);
+	}
+	
+	/**
 	 * Tests that the speed of the motors is more than zero when climbing and extending
 	 */
 	@Test
@@ -106,6 +132,30 @@ public class ClimbSystemTest {
 		shouldRetractHook = true;
 		climbSystem.run();
 		Assert.assertTrue(motorSpeedOutput > 0);
+		Assert.assertTrue(hookExtenderOutput < 0);
+	}
+	
+	/**
+	 * Tests that the speed of the motors is more than zero when rewinding and extending
+	 */
+	@Test
+	public void extendAndRewind() {
+		shouldRewind = true;
+		shouldExtendHook = true;
+		climbSystem.run();
+		Assert.assertTrue(motorSpeedOutput < 0);
+		Assert.assertTrue(hookExtenderOutput > 0);
+	}
+	
+	/**
+	 * Tests that the speed of the motors is more than zero when rewinding and retracting
+	 */
+	@Test
+	public void retractAndRewind() {
+		shouldRewind = true;
+		shouldRetractHook = true;
+		climbSystem.run();
+		Assert.assertTrue(motorSpeedOutput < 0);
 		Assert.assertTrue(hookExtenderOutput < 0);
 	}
 	
@@ -146,15 +196,84 @@ public class ClimbSystemTest {
 	}
 	
 	/**
-	 * Tests that robot still climbs when all three buttons are pressed
+	 * Tests that the motors returns to 0 after rewinding
 	 */
 	@Test
-	public void allThreePressed() {
+	public void stationaryAfterRewinding() {
+		shouldRewind = true;
+		climbSystem.run();
+		shouldRewind = false;
+		climbSystem.run();
+		Assert.assertTrue(motorSpeedOutput == 0);
+	}
+	
+	/**
+	 * Tests that robot still climbs when both hook buttons are pressed
+	 */
+	@Test
+	public void stillClimbs() {
 		shouldClimb = true;
+		shouldRewind = false;
 		shouldExtendHook = true;
 		shouldRetractHook = true;
 		climbSystem.run();
 		Assert.assertTrue(motorSpeedOutput > 0);
+		Assert.assertTrue(hookExtenderOutput == 0);
+	}
+	
+	/**
+	 * Tests that robot still rewinds when both hook buttons are pressed
+	 */
+	@Test
+	public void stillRewinds() {
+		shouldClimb = false;
+		shouldRewind = true;
+		shouldExtendHook = true;
+		shouldRetractHook = true;
+		climbSystem.run();
+		Assert.assertTrue(motorSpeedOutput < 0);
+		Assert.assertTrue(hookExtenderOutput == 0);
+	}
+	
+	/**
+	 * Tests that robot still extends hook when both climb buttons are pressed
+	 */
+	@Test
+	public void stillExtends() {
+		shouldClimb = true;
+		shouldRewind = true;
+		shouldExtendHook = true;
+		shouldRetractHook = false;
+		climbSystem.run();
+		Assert.assertTrue(motorSpeedOutput == 0);
+		Assert.assertTrue(hookExtenderOutput > 0);
+	}
+	
+	/**
+	 * Tests that robot still retracts hook when both climb buttons are pressed
+	 */
+	@Test
+	public void stillRetracts() {
+		shouldClimb = true;
+		shouldRewind = true;
+		shouldExtendHook = false;
+		shouldRetractHook = true;
+		climbSystem.run();
+		Assert.assertTrue(motorSpeedOutput == 0);
+		Assert.assertTrue(hookExtenderOutput < 0);
+	}
+	
+	/**
+	 * Tests that robot does nothing when all buttons are pressed
+	 */
+	@Test
+	public void allFourPressed() {
+		shouldClimb = true;
+		shouldRewind = true;
+		shouldExtendHook = true;
+		shouldRetractHook = true;
+		climbSystem.run();
+		Assert.assertTrue(motorSpeedOutput == 0);
 		Assert.assertTrue(hookExtenderOutput == 0);
 	}
 	
@@ -165,12 +284,18 @@ public class ClimbSystemTest {
 		
 		/* (non-Javadoc)
 		 * @see org.usfirst.frc.team2585.input.InputMethod#shouldClimb()
+		 * @see org.usfirst.frc.team2585.input.InputMethod#shouldRewind()
 		 * @see org.usfirst.frc.team2585.input.InputMethod#shouldRetractHook()
 		 * @see org.usfirst.frc.team2585.input.InputMethod#shouldExtendHook()
 		 */
 		@Override
 		public boolean shouldClimb() {
 			return shouldClimb;
+		}
+		
+		@Override
+		public boolean shouldRewind() {
+			return shouldRewind;
 		}
 		
 		@Override
