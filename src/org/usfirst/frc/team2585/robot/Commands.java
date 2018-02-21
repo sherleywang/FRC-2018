@@ -32,7 +32,7 @@ public class Commands {
 	 * Move the robot forward with no rotation
 	 */
 	private static void driveForward() {
-		drivetrain.driveWithGyro(-0.25, 0.0);
+		drivetrain.driveWithGyro(-0.45, 0.0);
 	}
 	
 	/**

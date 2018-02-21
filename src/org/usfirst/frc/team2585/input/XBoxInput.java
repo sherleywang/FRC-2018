@@ -3,7 +3,6 @@ package org.usfirst.frc.team2585.input;
 import org.impact2585.lib2585.XboxConstants;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Input from a single XBox controller
@@ -41,8 +40,7 @@ public class XBoxInput extends InputMethod {
 	 */
 	@Override
 	public boolean shouldRotateUp(){
-		SmartDashboard.putBoolean("Controller: Rotate Up", controller.getRawButton(XboxConstants.RIGHT_BUMPER));
-		return controller.getRawButton(XboxConstants.RIGHT_BUMPER);
+		return controller.getRawButton(XboxConstants.X_BUTTON);
 	}
 
 	/* (non-Javadoc)
@@ -50,8 +48,7 @@ public class XBoxInput extends InputMethod {
 	 */
 	@Override
 	public boolean shouldRotateDown(){
-		SmartDashboard.putBoolean("Controller: Rotate Down", controller.getRawButton(XboxConstants.LEFT_BUMPER));
-		return controller.getRawButton(XboxConstants.LEFT_BUMPER);
+		return controller.getRawButton(XboxConstants.A_BUTTON);
 	}
 	
 	/* (non-Javadoc)
@@ -59,7 +56,7 @@ public class XBoxInput extends InputMethod {
 	 */
 	@Override
 	public double forwardAmount() {
-		return controller.getRawAxis(XboxConstants.LEFT_Y_AXIS);
+		return -controller.getRawAxis(XboxConstants.LEFT_Y_AXIS);
 	}
 
 	/* (non-Javadoc)
@@ -91,14 +88,14 @@ public class XBoxInput extends InputMethod {
 	 * @see org.usfirst.frc.team2585.input.InputMethod#shouldExtendHook()
 	 */
 	public boolean shouldExtendHook() {
-		return controller.getRawButton(XboxConstants.X_BUTTON);
+		return controller.getRawButton(XboxConstants.RIGHT_BUMPER);
 	}
 	
 	/* (non-Javadoc)
 	 * @see org.usfirst.frc.team2585.input.InputMethod#shouldRetractHook()
 	 */
 	public boolean shouldRetractHook() {
-		return controller.getRawButton(XboxConstants.A_BUTTON);
+		return controller.getRawButton(XboxConstants.LEFT_BUMPER);
 	}
 	
 	/* (non-Javadoc)

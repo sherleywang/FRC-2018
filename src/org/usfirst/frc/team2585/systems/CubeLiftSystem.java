@@ -71,7 +71,7 @@ public class CubeLiftSystem extends RobotSystem {
 		if (!IS_TEST_SYSTEM) {
 			SmartDashboard.putNumber("Lift Motor", speed);
 		}
-		liftMotor.updateWithSpeed(speed);
+		liftMotor.updateWithSpeed(-speed);
 	}
 	
 	/**

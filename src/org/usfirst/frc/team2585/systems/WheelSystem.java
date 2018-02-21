@@ -22,7 +22,7 @@ public class WheelSystem extends RobotSystem {
 	
 	private final double DEADZONE = 0.2;
 	
-	private final double FORWARD_MULTIPLIER = 0.65;
+	private final double FORWARD_MULTIPLIER = 0.75;
 	private final double FORWARD_MULTIPLIER_BOOST = 0.8;
 	private final double ROTATION_RATE = 4.0;
 	private final double DERIVATIVE_MULTIPLIER = 0.1;
@@ -57,7 +57,7 @@ public class WheelSystem extends RobotSystem {
 	 * Pass the user inputs to the drive train to run the motors the appropriate amounts
 	 */
 	public void run() {
-		double forwardInput = input.forwardAmount(); // reverse direction of driving
+		double forwardInput = input.forwardAmount();
 		if(input.shouldBoost()){
 			forwardInput = (Math.abs(forwardInput) > DEADZONE)? forwardInput * FORWARD_MULTIPLIER_BOOST : 0;
 		} else {

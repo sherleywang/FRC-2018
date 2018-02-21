@@ -78,7 +78,7 @@ public class WheelSystemTest {
 	public void testPositiveRamp() {
 		forwardInput = 1;
 		wheelSystem.run();
-		Assert.assertTrue(forwardOutput == 0.65);
+		Assert.assertTrue(forwardOutput == 0.75);
 	}
 	
 	/**
@@ -88,7 +88,7 @@ public class WheelSystemTest {
 	public void testNegativeRamp() {
 		forwardInput = -1;
 		wheelSystem.run();
-		Assert.assertTrue(forwardOutput == -0.65);
+		Assert.assertTrue(forwardOutput == -0.75);
 	}
 	
 	/**
@@ -360,7 +360,7 @@ public class WheelSystemTest {
 		Assert.assertTrue(forwardOutput == 0.8);
 		boostInput = false;
 		wheelSystem.run();
-		Assert.assertTrue(forwardOutput == 0.65);
+		Assert.assertTrue(forwardOutput == 0.75);
 		
 		// testing boost for backwards
 		boostInput = true;
@@ -369,7 +369,7 @@ public class WheelSystemTest {
 		Assert.assertTrue(forwardOutput == -0.8);
 		boostInput = false;
 		wheelSystem.run();
-		Assert.assertTrue(forwardOutput == -0.65);
+		Assert.assertTrue(forwardOutput == -0.75);
 		
 		// testing boost for forward and turning right
 		boostInput = true;
@@ -379,7 +379,7 @@ public class WheelSystemTest {
 		Assert.assertTrue(forwardOutput == 0.8);
 		boostInput = false;
 		wheelSystem.run();
-		Assert.assertTrue(forwardOutput == 0.65);
+		Assert.assertTrue(forwardOutput == 0.75);
 		
 		// testing boost for forward and turning left
 		boostInput = true;
@@ -389,7 +389,7 @@ public class WheelSystemTest {
 		Assert.assertTrue(forwardOutput == 0.8);
 		boostInput = false;
 		wheelSystem.run();
-		Assert.assertTrue(forwardOutput == 0.65);
+		Assert.assertTrue(forwardOutput == 0.75);
 		
 		// testing boost for backwards and turning right
 		boostInput = true;
@@ -399,7 +399,7 @@ public class WheelSystemTest {
 		Assert.assertTrue(forwardOutput == -0.8);
 		boostInput = false;
 		wheelSystem.run();
-		Assert.assertTrue(forwardOutput == -0.65);
+		Assert.assertTrue(forwardOutput == -0.75);
 		
 		// testing boost for backwards and turning left
 		boostInput = true;
@@ -409,7 +409,7 @@ public class WheelSystemTest {
 		Assert.assertTrue(forwardOutput == -0.8);
 		boostInput = false;
 		wheelSystem.run();
-		Assert.assertTrue(forwardOutput == -0.65);
+		Assert.assertTrue(forwardOutput == -0.75);
 	}
 
 	/**
