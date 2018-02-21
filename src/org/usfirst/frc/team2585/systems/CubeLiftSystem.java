@@ -6,20 +6,19 @@ import org.usfirst.frc.team2585.robot.RobotMap;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Spark;
-import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * This system lifts cubes
  */
 public class CubeLiftSystem extends RobotSystem {
-	
 	DigitalInput limitSwitchTop;
 	DigitalInput limitSwitchBottom;
-	RampedSpeedController liftMotor;
 	
-	static double motorSpeed = 0.65;
+	static double MAX_MOTOR_SPEED = 0.65;
 	public static boolean IS_TEST_SYSTEM = false;
+	
+	RampedSpeedController liftMotor;
 
 	
 	/* (non-Javadoc)
@@ -32,8 +31,7 @@ public class CubeLiftSystem extends RobotSystem {
 		limitSwitchTop = new DigitalInput(RobotMap.LIMIT_SWITCH_TOP);
 		limitSwitchBottom = new DigitalInput(RobotMap.LIMIT_SWITCH_BOTTOM);
 		
-		SpeedController controller = new Spark(RobotMap.CUBE_LIFT_MOTOR);
-		liftMotor = new RampedSpeedController(controller);
+		liftMotor = new RampedSpeedController(new Spark(RobotMap.CUBE_LIFT_MOTOR));
 	}
 	
 
@@ -70,7 +68,10 @@ public class CubeLiftSystem extends RobotSystem {
 	 * @param speed the speed to ramp the motor to
 	 */
 	public void setMotorSpeed(double speed) {
-		liftMotor.updateWithSpeed(motorSpeed);
+		if (!IS_TEST_SYSTEM) {
+			SmartDashboard.putNumber("Lift Motor", speed);
+		}
+		liftMotor.updateWithSpeed(speed);
 	}
 	
 	/**
@@ -80,7 +81,7 @@ public class CubeLiftSystem extends RobotSystem {
 		if(isTopSwitchPressed()){
 			setMotorSpeed(0);
 		} else {
-			setMotorSpeed(motorSpeed);
+			setMotorSpeed(MAX_MOTOR_SPEED);
 		}
 	}
 	
@@ -91,7 +92,7 @@ public class CubeLiftSystem extends RobotSystem {
 		if(isBottomSwitchPressed()){
 			setMotorSpeed(0);
 		} else {
-			setMotorSpeed(-motorSpeed);
+			setMotorSpeed(-MAX_MOTOR_SPEED);
 		}
 	}
 

@@ -5,6 +5,7 @@ import org.usfirst.frc.team2585.robot.Environment;
 import org.usfirst.frc.team2585.robot.RobotMap;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -14,7 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class WheelSystem extends RobotSystem {
 	private RampedSpeedController rightDrive;
 	private RampedSpeedController leftDrive;
-	
+
 	private ADXRS450_Gyro gyro;
 	
 	private double targetAngle = 0.0;
@@ -33,6 +34,8 @@ public class WheelSystem extends RobotSystem {
 
 	public static boolean IS_TEST_SYSTEM = false;
 	
+	private PowerDistributionPanel pdp;
+	
 		
 	/* (non-Javadoc)
 	 * @see org.usfirst.frc.team2585.systems.Initializable#init(org.usfirst.frc.team2585.Environment)
@@ -41,11 +44,13 @@ public class WheelSystem extends RobotSystem {
 	public void init(Environment environ) {
 		super.init(environ);
 
-		leftDrive = new RampedSpeedController(new Spark(RobotMap.LEFT_DRIVE_MOTOR));
 		rightDrive = new RampedSpeedController(new Spark(RobotMap.RIGHT_DRIVE_MOTOR));
+		leftDrive = new RampedSpeedController(new Spark(RobotMap.LEFT_DRIVE_MOTOR));
 		
 		gyro = new ADXRS450_Gyro();
 		targetAngle = getGyroAngle();
+		
+		pdp = new PowerDistributionPanel();
 	}
 	
 	/**
@@ -71,6 +76,17 @@ public class WheelSystem extends RobotSystem {
 			driveWithGyro(forwardInput, rotationInput);
 		} else {
 			driveWithoutGyro(forwardInput, rotationInput);
+		}
+		
+		
+		if (!IS_TEST_SYSTEM) {
+			SmartDashboard.putBoolean("USING GYRO", isUsingGyro);
+			
+			SmartDashboard.putNumber("PDP: WHEELS, L1", pdp.getCurrent(RobotMap.PDP_LEFT_DRIVE_MOTOR_1));
+			SmartDashboard.putNumber("PDP: WHEELS, L2", pdp.getCurrent(RobotMap.PDP_LEFT_DRIVE_MOTOR_2));
+			
+			SmartDashboard.putNumber("PDP: WHEELS, R1", pdp.getCurrent(RobotMap.PDP_RIGHT_DRIVE_MOTOR_1));
+			SmartDashboard.putNumber("PDP: WHEELS, R2", pdp.getCurrent(RobotMap.PDP_RIGHT_DRIVE_MOTOR_2));
 		}
 	}
 	
@@ -150,7 +166,7 @@ public class WheelSystem extends RobotSystem {
 		if (Math.abs(rightSpeed) > 1) rightSpeed = Math.copySign(1, rightSpeed);
 		
 		// Both sides driving in same direction
-		// If wiring doesn't explicitly compensate for different sides, must make rightSpeed negative
+		// If wiring doesn't explicitly compensate for different sides, must make rightSpeed negative		
 		leftDrive.updateWithSpeed(leftSpeed);
 		rightDrive.updateWithSpeed(-rightSpeed);
 		
@@ -212,7 +228,7 @@ public class WheelSystem extends RobotSystem {
 	 * @see org.impact2585.lib2585.Destroyable#destroy()
 	 */
 	@Override
-	public void destroy() {
+	public void destroy() {		
 		leftDrive.destroy();
 		rightDrive.destroy();
 	}

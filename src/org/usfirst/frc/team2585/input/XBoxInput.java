@@ -3,6 +3,7 @@ package org.usfirst.frc.team2585.input;
 import org.impact2585.lib2585.XboxConstants;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Input from a single XBox controller
@@ -40,6 +41,7 @@ public class XBoxInput extends InputMethod {
 	 */
 	@Override
 	public boolean shouldRotateUp(){
+		SmartDashboard.putBoolean("Controller: Rotate Up", controller.getRawButton(XboxConstants.RIGHT_BUMPER));
 		return controller.getRawButton(XboxConstants.RIGHT_BUMPER);
 	}
 
@@ -48,6 +50,7 @@ public class XBoxInput extends InputMethod {
 	 */
 	@Override
 	public boolean shouldRotateDown(){
+		SmartDashboard.putBoolean("Controller: Rotate Down", controller.getRawButton(XboxConstants.LEFT_BUMPER));
 		return controller.getRawButton(XboxConstants.LEFT_BUMPER);
 	}
 	

@@ -5,18 +5,17 @@ import org.usfirst.frc.team2585.robot.Environment;
 import org.usfirst.frc.team2585.robot.RobotMap;
 
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * This system grabs onto a bar and lifts the robot up.
  */
 public class ClimbSystem extends RobotSystem {
-	
 	RampedSpeedController climbMotorLeft;
 	RampedSpeedController climbMotorRight;
-	
 	RampedSpeedController hookExtender;
 	
-	static double motorSpeed = 0.65;
+	static double MAX_MOTOR_SPEED = 0.65;
 	
 	/* (non-Javadoc)
 	 * @see org.usfirst.frc.team2585.systems.RobotSystem#init(org.usfirst.frc.team2585.robot.Environment)
@@ -47,7 +46,7 @@ public class ClimbSystem extends RobotSystem {
 	@Override
 	public void run() {
 		if(input.shouldClimb()){
-			setClimbMotorSpeed(motorSpeed);
+			setClimbMotorSpeed(MAX_MOTOR_SPEED);
 		} else {
 			setClimbMotorSpeed(0);
 		}
@@ -55,9 +54,9 @@ public class ClimbSystem extends RobotSystem {
 		if (input.shouldExtendHook() && input.shouldRetractHook()) {
 			setHookExtenderSpeed(0);
 		} else if (input.shouldExtendHook()) {
-			setHookExtenderSpeed(motorSpeed);
+			setHookExtenderSpeed(MAX_MOTOR_SPEED);
 		} else if (input.shouldRetractHook()){
-			setHookExtenderSpeed(-motorSpeed);
+			setHookExtenderSpeed(-MAX_MOTOR_SPEED);
 		} else {
 			setHookExtenderSpeed(0);
 		}
@@ -68,13 +67,14 @@ public class ClimbSystem extends RobotSystem {
 	 */
 	public void setClimbMotorSpeed(double speed) {
 		climbMotorLeft.updateWithSpeed(speed);
-		climbMotorRight.updateWithSpeed(speed);
+		climbMotorRight.updateWithSpeed(-speed);
 	}
 	
 	/**
 	 * @param speed the speed to set the hook extending motor to
 	 */
 	public void setHookExtenderSpeed(double speed) {
+		SmartDashboard.putNumber("HOOK EXTENDER", speed);
 		hookExtender.updateWithSpeed(speed);
 	}
 
