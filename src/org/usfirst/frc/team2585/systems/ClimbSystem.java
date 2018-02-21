@@ -45,8 +45,12 @@ public class ClimbSystem extends RobotSystem {
 	 */
 	@Override
 	public void run() {
-		if(input.shouldClimb()){
+		if(input.shouldClimb() && input.shouldRewind()) {
+			setClimbMotorSpeed(0);
+		} else if(input.shouldClimb()){
 			setClimbMotorSpeed(MAX_MOTOR_SPEED);
+		} else if (input.shouldRewind()) {
+			setClimbMotorSpeed(-MAX_MOTOR_SPEED);
 		} else {
 			setClimbMotorSpeed(0);
 		}

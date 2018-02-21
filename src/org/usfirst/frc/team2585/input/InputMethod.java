@@ -40,6 +40,14 @@ public abstract class InputMethod {
 	}
 	
 	/**
+	 * @return a boolean denoting whether or not the robot should rewind the blue thing
+	 */
+	public boolean shouldRewind() {
+		return false;
+	}
+	
+	
+	/**
 	 * @return the amount that the robot should drive forward
 	 */
 	public double forwardAmount() {
