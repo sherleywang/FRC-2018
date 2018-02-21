@@ -62,13 +62,6 @@ public abstract class InputMethod {
 	}
 	
 	/**
-	 * @return whether the drive train should move faster(boost)
-	 */
-	public boolean shouldBoost() {
-		return false;
-	}
-	
-	/**
 	 * @return whether the hook should extend
 	 */
 	public boolean shouldExtendHook() {
