@@ -16,7 +16,6 @@ public class WheelSystemTest {
 	
 	private double forwardInput;
 	private double rotationInput;
-	private boolean boostInput;
 	private boolean toggleGyroInput;
 	
 	private double forwardOutput;
@@ -55,7 +54,6 @@ public class WheelSystemTest {
 	public void resetInput() {
 		forwardInput = 0;
 		rotationInput = 0;
-		boostInput = false;
 		toggleGyroInput = false;
 		forwardOutput = 0;
 		rotationOutput = 0;
@@ -347,70 +345,6 @@ public class WheelSystemTest {
 		wheelSystem.driveWithGyro(0, 0);
 		Assert.assertTrue(rotationOutput == 0);
 	}
-	
-	/**
-	 * Tests the boost system
-	 */
-	@Test
-	public void testBoost() {
-		// testing boost for forward
-		boostInput = true;
-		forwardInput = 1;
-		wheelSystem.run();
-		Assert.assertTrue(forwardOutput == 0.8);
-		boostInput = false;
-		wheelSystem.run();
-		Assert.assertTrue(forwardOutput == 0.75);
-		
-		// testing boost for backwards
-		boostInput = true;
-		forwardInput = -1;
-		wheelSystem.run();
-		Assert.assertTrue(forwardOutput == -0.8);
-		boostInput = false;
-		wheelSystem.run();
-		Assert.assertTrue(forwardOutput == -0.75);
-		
-		// testing boost for forward and turning right
-		boostInput = true;
-		forwardInput = 1;
-		rotationInput = 1;
-		wheelSystem.run();
-		Assert.assertTrue(forwardOutput == 0.8);
-		boostInput = false;
-		wheelSystem.run();
-		Assert.assertTrue(forwardOutput == 0.75);
-		
-		// testing boost for forward and turning left
-		boostInput = true;
-		forwardInput = 1;
-		rotationInput = -1;
-		wheelSystem.run();
-		Assert.assertTrue(forwardOutput == 0.8);
-		boostInput = false;
-		wheelSystem.run();
-		Assert.assertTrue(forwardOutput == 0.75);
-		
-		// testing boost for backwards and turning right
-		boostInput = true;
-		forwardInput = -1;
-		rotationInput = 1;
-		wheelSystem.run();
-		Assert.assertTrue(forwardOutput == -0.8);
-		boostInput = false;
-		wheelSystem.run();
-		Assert.assertTrue(forwardOutput == -0.75);
-		
-		// testing boost for backwards and turning left
-		boostInput = true;
-		forwardInput = -1;
-		rotationInput = -1;
-		wheelSystem.run();
-		Assert.assertTrue(forwardOutput == -0.8);
-		boostInput = false;
-		wheelSystem.run();
-		Assert.assertTrue(forwardOutput == -0.75);
-	}
 
 	/**
 	 * Test the ability to disable the gyro
@@ -444,14 +378,6 @@ public class WheelSystemTest {
 		@Override
 		public double rotationAmount() {
 			return rotationInput;
-		}
-		
-		/* (non-Javadoc)
-		 * @see org.usfirst.frc.team2585.input.InputMethod#shouldBoost()
-		 */
-		@Override
-		public boolean shouldBoost() {
-			return boostInput;
 		}
 		
 		/* (non-Javadoc)

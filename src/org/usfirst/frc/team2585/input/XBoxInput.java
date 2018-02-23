@@ -75,12 +75,12 @@ public class XBoxInput extends InputMethod {
 	public boolean shouldClimb(){
 		return controller.getRawButton(XboxConstants.Y_BUTTON);
 	}
-	
+
 	/* (non-Javadoc)
-	 * @see org.usfirst.frc.team2585.input.InputMethod#shouldBoost()
+	 * @see org.usfirst.frc.team2585.input.InputMethod#shouldRewind()
 	 */
 	@Override
-	public boolean shouldBoost(){
+	public boolean shouldRewind(){
 		return controller.getRawButton(XboxConstants.B_BUTTON);
 	}
 	
