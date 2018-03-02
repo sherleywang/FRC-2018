@@ -18,6 +18,8 @@ public class ClimbSystemTest {
 	boolean shouldExtendHook;
 	boolean shouldRetractHook;
 	
+	boolean isExtenderSwitchPressed;
+	
 	double motorSpeedOutput;
 	double hookExtenderOutput;
 	
@@ -40,6 +42,7 @@ public class ClimbSystemTest {
 		shouldRewind = false;
 		shouldExtendHook = false;
 		shouldRetractHook = false;
+		isExtenderSwitchPressed = false;
 		climbSystem.run();
 		Assert.assertTrue(motorSpeedOutput == 0);
 		Assert.assertTrue(hookExtenderOutput == 0);
@@ -73,9 +76,34 @@ public class ClimbSystemTest {
 	@Test
 	public void extendMotorExtends() {
 		shouldExtendHook = true;
+		isExtenderSwitchPressed = false;
 		shouldRetractHook = false;
 		climbSystem.run();
 		Assert.assertTrue(hookExtenderOutput > 0);
+	}
+	
+	/**
+	 * Tests that the speed of the extender motor is 0 when extender switch is pressed
+	 */
+	@Test
+	public void extenderSwitchWorks() {
+		shouldExtendHook = true;
+		isExtenderSwitchPressed = true;
+		shouldRetractHook = false;
+		climbSystem.run();
+		Assert.assertTrue(hookExtenderOutput == 0);
+	}
+	
+	/**
+	 * Tests that the speed of the extender motor is less than 0 when extender switch is pressed
+	 */
+	@Test
+	public void extenderSwitchDoesNotStopRetract() {
+		shouldExtendHook = false;
+		isExtenderSwitchPressed = true;
+		shouldRetractHook = true;
+		climbSystem.run();
+		Assert.assertTrue(hookExtenderOutput < 0);
 	}
 	
 	/**
@@ -84,6 +112,7 @@ public class ClimbSystemTest {
 	@Test
 	public void extendMotorRetracts() {
 		shouldExtendHook = false;
+		isExtenderSwitchPressed = false;
 		shouldRetractHook = true;
 		climbSystem.run();
 		Assert.assertTrue(hookExtenderOutput < 0);
@@ -317,6 +346,7 @@ public class ClimbSystemTest {
 		/* (non-Javadoc)
 		 * @see org.usfirst.frc.team2585.systems.ClimbSystem#setClimbMotorSpeed(double)
 		 * @see org.usfirst.frc.team2585.systems.ClimbSystem#setHookExtenderSpeed(double)
+		 * @see org.usfirst.frc.team2585.systems.ClimbSystem#isExtenderSwitchPressed()
 		 */
 		@Override
 		public void setClimbMotorSpeed(double speed) {
@@ -326,6 +356,11 @@ public class ClimbSystemTest {
 		@Override 
 		public void setHookExtenderSpeed(double speed) {
 			hookExtenderOutput = speed;
+		}
+		
+		@Override
+		public boolean isExtenderSwitchPressed() {
+			return isExtenderSwitchPressed;
 		}
 	}
 }
