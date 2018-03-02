@@ -5,7 +5,6 @@ import org.usfirst.frc.team2585.robot.Environment;
 import org.usfirst.frc.team2585.robot.RobotMap;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
-import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -33,7 +32,7 @@ public class WheelSystem extends RobotSystem {
 
 	public static boolean IS_TEST_SYSTEM = false;
 	
-	private PowerDistributionPanel pdp;
+//	private PowerDistributionPanel pdp;
 	
 		
 	/* (non-Javadoc)
@@ -49,7 +48,7 @@ public class WheelSystem extends RobotSystem {
 		gyro = new ADXRS450_Gyro();
 		targetAngle = getGyroAngle();
 		
-		pdp = new PowerDistributionPanel();
+//		pdp = new PowerDistributionPanel();
 	}
 	
 	/**
@@ -77,11 +76,11 @@ public class WheelSystem extends RobotSystem {
 		if (!IS_TEST_SYSTEM) {
 			SmartDashboard.putBoolean("USING GYRO", isUsingGyro);
 			
-			SmartDashboard.putNumber("PDP: WHEELS, L1", pdp.getCurrent(RobotMap.PDP_LEFT_DRIVE_MOTOR_1));
-			SmartDashboard.putNumber("PDP: WHEELS, L2", pdp.getCurrent(RobotMap.PDP_LEFT_DRIVE_MOTOR_2));
-			
-			SmartDashboard.putNumber("PDP: WHEELS, R1", pdp.getCurrent(RobotMap.PDP_RIGHT_DRIVE_MOTOR_1));
-			SmartDashboard.putNumber("PDP: WHEELS, R2", pdp.getCurrent(RobotMap.PDP_RIGHT_DRIVE_MOTOR_2));
+//			SmartDashboard.putNumber("PDP: WHEELS, L1", pdp.getCurrent(RobotMap.PDP_LEFT_DRIVE_MOTOR_1));
+//			SmartDashboard.putNumber("PDP: WHEELS, L2", pdp.getCurrent(RobotMap.PDP_LEFT_DRIVE_MOTOR_2));
+//			
+//			SmartDashboard.putNumber("PDP: WHEELS, R1", pdp.getCurrent(RobotMap.PDP_RIGHT_DRIVE_MOTOR_1));
+//			SmartDashboard.putNumber("PDP: WHEELS, R2", pdp.getCurrent(RobotMap.PDP_RIGHT_DRIVE_MOTOR_2));
 		}
 	}
 	
