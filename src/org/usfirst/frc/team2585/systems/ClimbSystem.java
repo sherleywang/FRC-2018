@@ -102,6 +102,6 @@ public class ClimbSystem extends RobotSystem {
     * @return whether the extender limit switch is pressed
     */
    public boolean isExtenderSwitchPressed() {
-   		return limitSwitchExtender.get();
+   		return !limitSwitchExtender.get();
    }
 }
