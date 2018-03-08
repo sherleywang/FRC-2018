@@ -14,7 +14,7 @@ public class Commands {
 	private static WheelSystem drivetrain;
 	private static CubeLiftSystem cubeLift;
 	
-	private static final double METERS_PER_SECOND = 0.865; // ROBOT SPEED in  m/s
+	private static final double METERS_PER_SECOND = 1.19; // ROBOT SPEED in  m/s
 	private static final double ROBOT_LENGTH = 1.0668; // LENGTH OF THE ROBOT PLUS THE BUMPERS
 	
 	/**
@@ -32,7 +32,7 @@ public class Commands {
 	 * Move the robot forward with no rotation
 	 */
 	private static void driveForward() {
-		drivetrain.driveWithGyro(-0.45, 0.0);
+		drivetrain.driveWithGyro(-0.40, 0.0); // -0.40 is original
 	}
 	
 	/**
@@ -67,7 +67,7 @@ public class Commands {
 	 * Use the intake system to deposit a cube
 	 */
 	private static void depositCube() {
-		cubeLift.rotateUp();
+		cubeLift.rotateUpSlowly();
 	}
 	
 	/**
@@ -84,7 +84,7 @@ public class Commands {
 	 */
 	public class Main extends AutonomousCommand {
 		private long delayTime = 2000;
-		private long timeToDepositCube = 1500;
+		private long timeToDepositCube = 1000;
 		
 		private long middleDistanceToSwitch = distanceToTime(3.556-ROBOT_LENGTH);
 		private long middleLeftSegment = distanceToTime(2.1336);

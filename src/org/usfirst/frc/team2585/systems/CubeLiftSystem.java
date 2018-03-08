@@ -16,6 +16,7 @@ public class CubeLiftSystem extends RobotSystem {
 	DigitalInput limitSwitchBottom;
 	
 	static double MAX_MOTOR_SPEED = 0.65;
+	static double MAX_MOTOR_SPEED_SLOW = 0.5;
 	public static boolean IS_TEST_SYSTEM = false;
 	
 	RampedSpeedController liftMotor;
@@ -75,6 +76,19 @@ public class CubeLiftSystem extends RobotSystem {
 			setMotorSpeed(MAX_MOTOR_SPEED);
 		}
 	}
+	
+	/**
+	 * Rotate the arm up if the switch isn't pressed yet
+	 */
+	public void rotateUpSlowly() {
+		if(isTopSwitchPressed()){
+			setMotorSpeed(0);
+		} else {
+			setMotorSpeed(MAX_MOTOR_SPEED_SLOW);
+		}
+	}
+	
+	
 	
 	/**
 	 * Rotate the arm down if the switch isn't pressed yet
