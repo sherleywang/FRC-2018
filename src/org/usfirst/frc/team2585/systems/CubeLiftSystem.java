@@ -33,15 +33,6 @@ public class CubeLiftSystem extends RobotSystem {
 		
 		liftMotor = new RampedSpeedController(new Spark(RobotMap.CUBE_LIFT_MOTOR));
 	}
-	
-
-	/* (non-Javadoc)
-	 * @see org.impact2585.lib2585.Destroyable#destroy()
-	 */
-	@Override
-	public void destroy() {
-		liftMotor.destroy();
-	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Runnable#run()
@@ -102,6 +93,15 @@ public class CubeLiftSystem extends RobotSystem {
 	@Override
 	public void stop() {
 		liftMotor.updateWithSpeed(0);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.impact2585.lib2585.Destroyable#destroy()
+	 */
+	@Override
+	public void destroy() {
+		stop();
+		liftMotor.destroy();
 	}
 	
 	 /**

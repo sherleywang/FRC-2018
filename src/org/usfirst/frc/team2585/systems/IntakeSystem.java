@@ -76,6 +76,7 @@ public class IntakeSystem extends RobotSystem implements Runnable {
 	 */
 	@Override
 	public void destroy() {
+		stop();
 		intakeMotorLeft.destroy();
 		intakeMotorRight.destroy();
 	}

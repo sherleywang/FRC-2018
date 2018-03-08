@@ -222,7 +222,8 @@ public class WheelSystem extends RobotSystem {
 	 * @see org.impact2585.lib2585.Destroyable#destroy()
 	 */
 	@Override
-	public void destroy() {		
+	public void destroy() {
+		stop();
 		leftDrive.destroy();
 		rightDrive.destroy();
 	}

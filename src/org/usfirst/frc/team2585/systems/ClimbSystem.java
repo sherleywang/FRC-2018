@@ -36,16 +36,6 @@ public class ClimbSystem extends RobotSystem {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.impact2585.lib2585.Destroyable#destroy()
-	 */
-	@Override
-	public void destroy() {
-		climbMotorLeft.destroy();
-		climbMotorRight.destroy();
-		hookExtender.destroy();
-	}
-
-	/* (non-Javadoc)
 	 * @see java.lang.Runnable#run()
 	 */
 	@Override
@@ -96,6 +86,17 @@ public class ClimbSystem extends RobotSystem {
 	public void stop() {
 		climbMotorLeft.updateWithSpeed(0);
 		climbMotorRight.updateWithSpeed(0);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.impact2585.lib2585.Destroyable#destroy()
+	 */
+	@Override
+	public void destroy() {
+		stop();
+		climbMotorLeft.destroy();
+		climbMotorRight.destroy();
+		hookExtender.destroy();
 	}
 
 	/**
