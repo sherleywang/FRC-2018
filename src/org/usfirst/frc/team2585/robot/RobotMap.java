@@ -20,7 +20,6 @@ public interface RobotMap {
 	// SENSORS
 	public static final int LIMIT_SWITCH_TOP = 0;
 	public static final int LIMIT_SWITCH_BOTTOM = 1;
-	public static final int LIMIT_SWITCH_EXTENDER = 2;
 
 	// PDP
 	public static final int PDP_RIGHT_DRIVE_MOTOR_1 = 14;

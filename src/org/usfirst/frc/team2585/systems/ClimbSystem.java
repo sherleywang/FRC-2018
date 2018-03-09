@@ -32,7 +32,6 @@ public class ClimbSystem extends RobotSystem {
 		
 		hookExtender = new RampedSpeedController (new Talon(RobotMap.HOOK_EXTENDER_MOTOR));
 		
-		limitSwitchExtender = new DigitalInput(RobotMap.LIMIT_SWITCH_EXTENDER);
 	}
 
 	/* (non-Javadoc)
@@ -51,8 +50,6 @@ public class ClimbSystem extends RobotSystem {
 		}
 		
 		if (input.shouldExtendHook() && input.shouldRetractHook()) {
-			setHookExtenderSpeed(0);
-		} else if(isExtenderSwitchPressed() && input.shouldExtendHook()) {
 			setHookExtenderSpeed(0);
 		} else if (input.shouldExtendHook()) {
 			setHookExtenderSpeed(MAX_MOTOR_SPEED);
@@ -98,11 +95,4 @@ public class ClimbSystem extends RobotSystem {
 		climbMotorRight.destroy();
 		hookExtender.destroy();
 	}
-
-	/**
-    * @return whether the extender limit switch is pressed
-    */
-   public boolean isExtenderSwitchPressed() {
-   		return !limitSwitchExtender.get();
-   }
 }

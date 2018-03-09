@@ -1,6 +1,7 @@
 package org.usfirst.frc.team2585.robot;
 
 import org.usfirst.frc.team2585.systems.CubeLiftSystem;
+import org.usfirst.frc.team2585.systems.IntakeSystem;
 import org.usfirst.frc.team2585.systems.WheelSystem;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -13,6 +14,7 @@ public class Commands {
 	private static Environment environ;
 	private static WheelSystem drivetrain;
 	private static CubeLiftSystem cubeLift;
+	private static IntakeSystem intake;
 	
 	private static final double METERS_PER_SECOND = 1.19; // ROBOT SPEED in  m/s
 	private static final double ROBOT_LENGTH = 1.0668; // LENGTH OF THE ROBOT PLUS THE BUMPERS
@@ -26,6 +28,7 @@ public class Commands {
 
 		drivetrain = (WheelSystem) environ.getSystem(Environment.WHEEL_SYSTEM);
 		cubeLift = (CubeLiftSystem) environ.getSystem(Environment.CUBE_LIFT_SYSTEM);
+		intake = (IntakeSystem) environ.getSystem(Environment.INTAKE_SYSTEM);
 	}
 	
 	/**
@@ -64,10 +67,17 @@ public class Commands {
 	}
 	
 	/**
-	 * Use the intake system to deposit a cube
+	 * Use the arm system to deposit a cube
 	 */
 	private static void depositCube() {
 		cubeLift.rotateUpSlowly();
+	}
+	
+	/**
+	 * Free the intake system
+	 */
+	private static void runIntake() {
+		intake.intakeCube();
 	}
 	
 	/**
@@ -127,6 +137,7 @@ public class Commands {
 		private void runStraight(long timeElapsed) {
 			if (timeElapsed < sideDistanceToSwitch) {
 				driveForward();
+				runIntake();
 			} else {
 				stop();
 			}
@@ -177,6 +188,7 @@ public class Commands {
 					if (leftSwitch) {
 						if (timeElapsed < middleLeftSegment) {
 							driveForward();
+							runIntake();
 						} else {
 							markTaskComplete();
 						}
@@ -206,6 +218,7 @@ public class Commands {
 				case 6: // DROP CUBE 
 					if (timeElapsed < timeToDepositCube) {
 						depositCube();
+						runIntake();
 					} else {
 						markTaskComplete();
 					}
@@ -223,12 +236,15 @@ public class Commands {
 		 * @param timeElapsed the time since the last task was completed
 		 */
 		private void runFromSide(long timeElapsed){
+			int intakeDelay = 500;
 			if (onLeftWithSwitch || onRightWithSwitch) {
 				switch(tasksComplete) {
 				case 0: // MOVE FORWARD
 					SmartDashboard.putString("AUTO STATUS", "MOVE FORWARD");
 					if(timeElapsed < sideDistanceToSwitch){
 						driveForward();
+						if(timeElapsed > intakeDelay)
+							runIntake();
 					} else {
 						markTaskComplete();
 					}
@@ -260,6 +276,7 @@ public class Commands {
 					SmartDashboard.putString("AUTO STATUS", "DEPOSIT");
 					if(timeElapsed < timeToDepositCube) {
 						depositCube();
+						runIntake();
 					} else {
 						markTaskComplete();
 					}
@@ -271,6 +288,7 @@ public class Commands {
 				}
 			} else { // Switch is on the other side
 				runStraight(timeElapsed);
+				runIntake();
 			}
 		}
 		
@@ -305,6 +323,8 @@ public class Commands {
 			SmartDashboard.putString("AUTO EXECUTOR", "STRAIGHT");
 			if (timeElapsed < timeToDriveStraight) {
 				driveForward();
+				runIntake();
+
 			} else {
 				stop();
 			}
@@ -325,6 +345,7 @@ public class Commands {
 			SmartDashboard.putString("AUTO EXECUTOR", "STRAIGHT");
 			if (timeElapsed < timeToDriveStraight) {
 				driveForward();
+				runIntake();
 			} else {
 				stop();
 			}
