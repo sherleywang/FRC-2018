@@ -16,7 +16,7 @@ public class Commands {
 	private static CubeLiftSystem cubeLift;
 	private static IntakeSystem intake;
 	
-	private static final double ANGLE_TOLERANCE = 5.0;
+	private static final double ANGLE_TOLERANCE = 25.0;
 	
 	private static final double METERS_PER_SECOND = 1.19; // ROBOT SPEED in  m/s
 	private static final double ROBOT_LENGTH = 1.0668; // LENGTH OF THE ROBOT PLUS THE BUMPERS
@@ -104,15 +104,18 @@ public class Commands {
 	 * Autonomous command that drives according to its position and the side of its switch
 	 */
 	public class Main extends AutonomousCommand {
-		private long intakeDelay = 800;
+		private long intakeDelay = 1000;
 		private long delayTime = 2000;
-		private long timeToDepositCube = 3300;
+		private long timeToDepositCube = 3700;
 		
-		private long middleDistanceToSwitch = distanceToTime(3.556-ROBOT_LENGTH);
-		private long middleLeftSegment = distanceToTime(2.1336);
-		private long middleRightSegment = distanceToTime(0.9144);
-		private long sideDistanceToSwitch = distanceToTime(4.2672-(ROBOT_LENGTH/2));
-		private long distanceInToSwitchFromSide = distanceToTime(0.9144);
+		//private long middleDistanceToSwitch = distanceToTime(3.556-ROBOT_LENGTH);
+		//private long middleLeftSegment = distanceToTime(2.1336);
+		//private long middleRightSegment = distanceToTime(0.9144);
+		private long middleDistanceToSwitch = distanceToTime(3.456);
+		private long middleLeftSegment = distanceToTime(1.2);
+		private long middleRightSegment = distanceToTime(1.2);
+		private long sideDistanceToSwitch = distanceToTime(4.8);
+		private long distanceInToSwitchFromSide = distanceToTime(1.05);
 		
 		private boolean shouldResetTime = false;
 		private boolean onLeftWithSwitch = false; 
@@ -126,7 +129,6 @@ public class Commands {
 		@Override
 		public void updateGameData() {
 			super.updateGameData();
-			
 			tasksComplete = 0;
 			onLeftWithSwitch = gameData.charAt(0) == 'L' && location == 1;
 			onRightWithSwitch = gameData.charAt(0) == 'R' && location == 3;
@@ -180,7 +182,9 @@ public class Commands {
 				case 1: // MOVE FORWARD 
 					if (timeElapsed < middleDistanceToSwitch/2) {
 						driveForward();
+						runIntake();
 					} else {
+						intake.stop();
 						markTaskComplete();
 					}
 					break;
@@ -201,17 +205,13 @@ public class Commands {
 					if (leftSwitch) {
 						if (timeElapsed < middleLeftSegment) {
 							driveForward();
-							runIntake();
 						} else {
-							intake.stop();
 							markTaskComplete();
 						}
 					} else if (rightSwitch) {
 						if (timeElapsed < middleRightSegment) {
 							driveForward();
-							runIntake();
 						} else {
-							intake.stop();
 							markTaskComplete();
 						}
 					}
@@ -264,8 +264,7 @@ public class Commands {
 					SmartDashboard.putString("AUTO STATUS", "MOVE FORWARD");
 					if(timeElapsed < sideDistanceToSwitch){
 						driveForward();
-						if(timeElapsed > intakeDelay)
-							runIntake();
+						runIntake();
 					} else {
 						markTaskComplete();
 						intake.stop();
@@ -315,8 +314,6 @@ public class Commands {
 				}
 			} else { // Switch is on the other side
 				runStraight(timeElapsed);
-				if(timeElapsed > intakeDelay)
-					runIntake();
 			}
 		}
 		
