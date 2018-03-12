@@ -88,8 +88,6 @@ public class CubeLiftSystem extends RobotSystem {
 		}
 	}
 	
-	
-	
 	/**
 	 * Rotate the arm down if the switch isn't pressed yet
 	 */

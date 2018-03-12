@@ -33,7 +33,6 @@ public class WheelSystem extends RobotSystem {
 	public static boolean IS_TEST_SYSTEM = false;
 	
 //	private PowerDistributionPanel pdp;
-	
 		
 	/* (non-Javadoc)
 	 * @see org.usfirst.frc.team2585.systems.Initializable#init(org.usfirst.frc.team2585.Environment)
