@@ -23,15 +23,15 @@ public class WheelSystem extends RobotSystem {
 	
 	private final double FORWARD_MULTIPLIER = 0.75;
 	private final double ROTATION_RATE = 4.0;
-	private final double DERIVATIVE_MULTIPLIER = 0.1;
-	private final double CORRECTION_MULTIPLIER = 0.01;
+	private final double DERIVATIVE_MULTIPLIER = 0.08; // originally 0.1
+	private final double CORRECTION_MULTIPLIER = 0.020;
 	private final double MAX_CORRECTION = 0.6;
 	
 	public boolean isUsingGyro = false;
 	public boolean pastToggle = false;
 
 	public static boolean IS_TEST_SYSTEM = false;
-	
+		
 //	private PowerDistributionPanel pdp;
 		
 	/* (non-Javadoc)
@@ -142,12 +142,17 @@ public class WheelSystem extends RobotSystem {
 	 */
 	public double rotateToAngle(double newTargetAngle){
 		targetAngle = newTargetAngle;
+		//targetAngle = newTargetAngle;
 		
 		double correction = getCorrection();
 		
 		arcadeDrive(0.0, correction);
 		
 		return getAngleError();
+	}
+	
+	public void setTargetAngle(double newTargetAngle) {
+		targetAngle = newTargetAngle;
 	}
 	
 	/**

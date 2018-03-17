@@ -16,7 +16,7 @@ public class CubeLiftSystem extends RobotSystem {
 	DigitalInput limitSwitchBottom;
 	
 	static double MAX_MOTOR_SPEED = 0.65;
-	static double MAX_MOTOR_SPEED_SLOW = 0.5;
+	static double MAX_MOTOR_SPEED_SLOW = 0.65;
 	public static boolean IS_TEST_SYSTEM = false;
 	
 	RampedSpeedController liftMotor;

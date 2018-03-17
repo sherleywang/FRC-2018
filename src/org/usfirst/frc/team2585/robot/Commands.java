@@ -20,6 +20,7 @@ public class Commands {
 	
 	private static final double METERS_PER_SECOND = 1.19; // ROBOT SPEED in  m/s
 	private static final double ROBOT_LENGTH = 1.0668; // LENGTH OF THE ROBOT PLUS THE BUMPERS
+	private static final int MAX_TURN_TIME = 2000;
 	
 	/**
 	 * Constructor that sets the environment and the required systems
@@ -37,7 +38,7 @@ public class Commands {
 	 * Move the robot forward with no rotation
 	 */
 	private static void driveForward() {
-		drivetrain.driveWithGyro(-0.40, 0.0); // -0.40 is original
+		drivetrain.driveWithGyro(-0.41, 0.0); // -0.40 is original
 	}
 	
 	/**
@@ -104,16 +105,17 @@ public class Commands {
 	 * Autonomous command that drives according to its position and the side of its switch
 	 */
 	public class Main extends AutonomousCommand {
-		private long intakeDelay = 1000;
+		private long intakeDelay = 2300;
+		private long armDelay = 1000; //so that the arm can re-intake the cube if it springs loose
 		private long delayTime = 2000;
-		private long timeToDepositCube = 3700;
+		private long timeToDepositCube = 5100;
 		
 		//private long middleDistanceToSwitch = distanceToTime(3.556-ROBOT_LENGTH);
 		//private long middleLeftSegment = distanceToTime(2.1336);
 		//private long middleRightSegment = distanceToTime(0.9144);
-		private long middleDistanceToSwitch = distanceToTime(3.456);
-		private long middleLeftSegment = distanceToTime(1.2);
-		private long middleRightSegment = distanceToTime(1.2);
+		private long middleDistanceToSwitch = distanceToTime(3.85);
+		private long middleLeftSegment = distanceToTime(1.7);
+		private long middleRightSegment = distanceToTime(1.7);
 		private long sideDistanceToSwitch = distanceToTime(4.8);
 		private long distanceInToSwitchFromSide = distanceToTime(1.05);
 		
@@ -190,6 +192,10 @@ public class Commands {
 					break;
 					
 				case 2: // ROTATE 
+					if (timeElapsed > MAX_TURN_TIME) {
+						markTaskComplete();
+						break;
+					}
 					if (leftSwitch) { // Switch on left side
 						if (turnLeft() < ANGLE_TOLERANCE) { // Turn left
 							markTaskComplete();
@@ -218,6 +224,10 @@ public class Commands {
 					break;
 					
 				case 4: // ROTATE BACK TO STRAIGHT
+					if (timeElapsed > MAX_TURN_TIME) {
+						markTaskComplete();
+						break;
+					}
 					if (turnStraight() < ANGLE_TOLERANCE) { // turn back to straight
 						markTaskComplete();
 					}
@@ -234,7 +244,8 @@ public class Commands {
 				case 6: // DROP CUBE 
 					if (timeElapsed < timeToDepositCube) {
 						if(!isTopSwitchPressed()) {
-							depositCube();
+							if(timeElapsed > armDelay)
+								depositCube();
 							if(timeElapsed < intakeDelay) {
 								runIntake();
 							} else {
@@ -272,6 +283,10 @@ public class Commands {
 					break;
 					
 				case 1: // TURN INWARDS
+					if (timeElapsed > MAX_TURN_TIME) {
+						markTaskComplete();
+						break;
+					}
 					SmartDashboard.putString("AUTO STATUS", "TURN IN");
 					if (onLeftWithSwitch) {
 						if(turnRight() < ANGLE_TOLERANCE){ 
@@ -297,7 +312,8 @@ public class Commands {
 					SmartDashboard.putString("AUTO STATUS", "DEPOSIT");
 					if(timeElapsed < timeToDepositCube) {
 						if(!isTopSwitchPressed()) {
-							depositCube();
+							if(timeElapsed > armDelay)
+								depositCube();
 							if(timeElapsed < intakeDelay)
 								runIntake();
 							else
@@ -341,8 +357,8 @@ public class Commands {
 	 * Autonomous command that drives straight no matter what
 	 */
 	public class Straight extends AutonomousCommand {
-		private static final int timeToDriveStraight = 2000;
-		private static final int intakeDelay = 800;
+		private long timeToDriveStraight = distanceToTime(3.72);
+		private static final int intakeDelay = 500;
 		/* (non-Javadoc)
 		 * @see org.usfirst.frc.team2585.AutonomousCommand#execute(long)
 		 */
