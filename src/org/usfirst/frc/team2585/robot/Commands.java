@@ -108,12 +108,12 @@ public class Commands {
 		private long intakeDelay = 2300;
 		private long armDelay = 1000; //so that the arm can re-intake the cube if it springs loose
 		private long delayTime = 2000;
-		private long timeToDepositCube = 5000;
+		private long timeToDepositCube = 5100;
 		
 		//private long middleDistanceToSwitch = distanceToTime(3.556-ROBOT_LENGTH);
 		//private long middleLeftSegment = distanceToTime(2.1336);
 		//private long middleRightSegment = distanceToTime(0.9144);
-		private long middleDistanceToSwitch = distanceToTime(3.85);
+		private long middleDistanceToSwitch = distanceToTime(4.3); // was 3.85
 		private long middleLeftSegment = distanceToTime(1.7);
 		private long middleRightSegment = distanceToTime(1.7);
 		private long sideDistanceToSwitch = distanceToTime(4.8);
@@ -182,9 +182,7 @@ public class Commands {
 				case 1: // MOVE FORWARD 
 					if (timeElapsed < middleDistanceToSwitch/2) {
 						driveForward();
-						runIntake();
 					} else {
-						intake.stop();
 						markTaskComplete();
 					}
 					break;
@@ -242,12 +240,9 @@ public class Commands {
 				case 6: // DROP CUBE 
 					if (timeElapsed < timeToDepositCube) {
 						if(!isTopSwitchPressed()) {
-							if(timeElapsed > armDelay)
+							runIntake();
+							if(timeElapsed > armDelay) {
 								depositCube();
-							if(timeElapsed < intakeDelay) {
-								runIntake();
-							} else {
-								intake.stop();
 							}
 						}
 					} else {
@@ -273,10 +268,8 @@ public class Commands {
 					SmartDashboard.putString("AUTO STATUS", "MOVE FORWARD");
 					if(timeElapsed < sideDistanceToSwitch){
 						driveForward();
-						runIntake();
 					} else {
 						markTaskComplete();
-						intake.stop();
 					}
 					break;
 					
@@ -310,12 +303,10 @@ public class Commands {
 					SmartDashboard.putString("AUTO STATUS", "DEPOSIT");
 					if(timeElapsed < timeToDepositCube) {
 						if(!isTopSwitchPressed()) {
-							if(timeElapsed > armDelay)
+							runIntake();
+							if(timeElapsed > armDelay) {
 								depositCube();
-							if(timeElapsed < intakeDelay)
-								runIntake();
-							else
-								intake.stop();
+							}
 						}
 					} else {
 						markTaskComplete();
