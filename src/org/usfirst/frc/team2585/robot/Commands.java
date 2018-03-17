@@ -108,7 +108,7 @@ public class Commands {
 		private long intakeDelay = 2300;
 		private long armDelay = 1000; //so that the arm can re-intake the cube if it springs loose
 		private long delayTime = 2000;
-		private long timeToDepositCube = 5100;
+		private long timeToDepositCube = 5000;
 		
 		//private long middleDistanceToSwitch = distanceToTime(3.556-ROBOT_LENGTH);
 		//private long middleLeftSegment = distanceToTime(2.1336);
@@ -176,9 +176,7 @@ public class Commands {
 			} else {
 				switch (tasksComplete) {
 				case 0: // DELAY
-					if (timeElapsed > delayTime) {
-						markTaskComplete();
-					} 	
+					markTaskComplete();
 					break;
 					
 				case 1: // MOVE FORWARD 
